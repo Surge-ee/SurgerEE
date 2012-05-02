@@ -51,6 +51,7 @@ class Dsutils {
 		$numerator = $this->EE->TMPL->fetch_param('numerator');
 		$denomenator = $this->EE->TMPL->fetch_param('denomenator');
 		$this->return_data = $numerator % $denomenator;
+		return $this->return_data;
 	}
 
 	/** Checks if an integer is halfway rounded up through the total.
@@ -59,7 +60,13 @@ class Dsutils {
 	function is_halfway() {
 		$count = $this->EE->TMPL->fetch_param('count');
 		$total = $this->EE->TMPL->fetch_param('total');
-		$this->return_data = ($count == ceil($total / 2));
+
+		if (is_numeric($count) && is_numeric($total) && $count == ceil($total / 2)) {
+			$this->return_data = 'y';
+		} else {
+			$this->return_data = 'n';
+		}
+		return $this->return_data;
 	}
 
 	/** Performs a regex replace on a string */
@@ -70,6 +77,7 @@ class Dsutils {
 
 		//Output transformed string
 		$this->return_data = preg_replace("/$regex/", $replace, $string);
+		return $this->return_data;
 	}
 
 	/** Searches for a regex in a string */
@@ -78,7 +86,8 @@ class Dsutils {
 		$regex   = $this->EE->TMPL->fetch_param('regex', '');
 
 		//Output transformed string
-		$this->return_data = preg_match("/$regex/", $string);
+		$this->return_data = (preg_match("/$regex/", $string)) ? 'y' : 'n';
+		return $this->return_data;
 	}
 
 	// -- Plugin Usage -- //
