@@ -82,7 +82,7 @@ class Dsutils {
 						ON (c.`channel_id` = t.`channel_id`) WHERE ";
 		// If excluding year, do it now
 		if ($exclude_current_year) {
-			$current_year = date('%Y');
+			$current_year = date('Y');
 			$sql .= " t.`year` != '$current_year' AND ";
 		}
 		// Add which channel it should come from
