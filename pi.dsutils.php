@@ -54,6 +54,67 @@ class Dsutils {
 		return $this->return_data;
 	}
 
+	/** A looping tag returning all of the years for which there are entries.
+	 *
+	 * Very useful for generating archive links based on calendar year.
+	 *
+	 * @param exclude_current_year y|n Whether or not to include the current year in the results.
+	 * @param channel <channel_name[|channel_name...]> Channel(s) to restrict search to.
+	 * @param status <open[|closed...]> Status of entries to restrict search to.
+	 * @return {year} Variable containing year for each iteration of the loop.
+	 */
+	function years() {
+		// Prepare parameters
+		$exclude_current_year = ($this->EE->TMPL->fetch_param('exclude_current_year', '') == 'yes');
+
+		$channels = explode('|', $this->EE->TMPL->fetch_param('channel', ''));
+		$num_channels = count($channels);
+
+		$statuses = explode('|', $this->EE->TMPL->fetch_param('status', 'open'));
+		$num_statuses = count($statuses);
+
+		$sort = (strtoupper($this->EE->TMPL->fetch_param('sort', 'desc')) === 'DESC') ? 'DESC' : 'ASC';
+
+		// Prepare query
+		$sql = "SELECT t.`year`
+				FROM `{$this->EE->db->dbprefix}channel_titles` AS t
+					JOIN `{$this->EE->db->dbprefix}channels` AS c
+						ON (c.`channel_id` = t.`channel_id`) WHERE ";
+		// If excluding year, do it now
+		if ($exclude_current_year) {
+			$current_year = date('%Y');
+			$sql .= " t.`year` != '$current_year' AND ";
+		}
+		// Add which channel it should come from
+		if ($num_channels > 0) {
+			for ($i = 0; $i < $num_channels; $i++) {
+				$sql .= "c.`channel_name`='{$channels[$i]}' AND ";
+			}
+		}
+		// Add which statuses it should pull.
+		$sql .= "(";
+		for ($i = 0; $i < $num_statuses; $i++) {
+			$sql .= "t.`status`='{$statuses[$i]}'";
+			if ($i != ($num_statuses - 1)) {
+				$sql .= " OR ";
+			}
+		}
+		// Add what order to pull in.
+		$sql .= ") GROUP BY t.`year` ORDER BY t.`entry_date` $sort";
+
+		// Execute query, build results
+		$variables = array();
+		$query = $this->EE->db->query($sql);
+
+		foreach($query->result() as $row) {
+			$variables[] = array(
+				'year' => $row->year
+			);
+		}
+
+		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
+	}
+
 	/** Checks if an integer is halfway rounded up through the total.
 	 *
 	 * Useful for determining if you are halfway through a loop. */
