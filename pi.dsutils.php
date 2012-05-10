@@ -165,7 +165,30 @@ class Dsutils {
 	Is Halfway:
 		{exp:dsutils:is_halfway count="5" total="9"}
 	Output:
-		true
+		y
+
+	Replace:
+		{exp:dsutils:replace regex="foo" reaplce="bar"}
+			Something foo.
+		{/exp:dsutils:replace}
+		OR
+		{exp:dsutils:replace string="Something foo." regex="foo" reaplce="bar"}
+	Output:
+		Something bar.
+
+	Match:
+		{exp:dsutils:match string="foo" regex="^[f]"}
+	Output:
+		y
+
+	Years:
+		{exp:dsutils:years channel="blog"}
+			<li>{year}</li>
+		{/exp:dsutils:years}
+	Output:
+		<li>2011</li>
+		<li>2010</li>
+		...
 <?php
 		$buffer = ob_get_contents();
 		ob_end_clean();
