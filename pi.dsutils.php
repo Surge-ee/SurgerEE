@@ -71,7 +71,9 @@ class Dsutils {
 
 	/** Performs a regex replace on a string */
 	function replace() {
-		$string = $this->EE->TMPL->fetch_param('string', '');
+		$param = $this->EE->TMPL->fetch_param('string', '');
+		$tagdata = $this->EE->TMPL->tagdata;
+		$string = ($tagdata != '' && $param == '') ? $tagdata : $param ;
 		$regex   = $this->EE->TMPL->fetch_param('regex', '');
 		$replace  = $this->EE->TMPL->fetch_param('replace', '');
 
