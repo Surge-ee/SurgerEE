@@ -54,6 +54,14 @@ class Dsutils {
 		return $this->return_data;
 	}
 
+	/** Applies division to passed parameters, then rounds up. */
+	function ceil_divide() {
+		$numerator = $this->EE->TMPL->fetch_param('numerator');
+		$denomenator = $this->EE->TMPL->fetch_param('denomenator');
+		$this->return_data = ceil($numerator / $denomenator);
+		return $this->return_data;
+	}
+
 	/** A looping tag returning all of the years for which there are entries.
 	 *
 	 * Very useful for generating archive links based on calendar year.
@@ -151,6 +159,21 @@ class Dsutils {
 		//Output transformed string
 		$this->return_data = (preg_match("/$regex/", $string)) ? 'y' : 'n';
 		return $this->return_data;
+	}
+
+	/** Just loops a certain number of times. */
+	function loop() {
+		$iters = (int) $this->EE->TMPL->fetch_param('iterations', '');
+
+		$variables = array();
+		for ($i = 1; $i <= $iters; $i++) {
+			$variables[] = array(
+				'count' => $i,
+				'total_results' => $iters
+			);
+		}
+
+		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
 	}
 
 	// -- Plugin Usage -- //
