@@ -48,16 +48,18 @@ class Dsutils {
 	 * Useful for outputting stuff every third, fourth, etc entry in
 	 * a loop. */
 	function modulo() {
-		$numerator = $this->EE->TMPL->fetch_param('numerator');
-		$denomenator = $this->EE->TMPL->fetch_param('denomenator');
+		$numerator = $this->EE->TMPL->fetch_param('numerator', '1');
+		$denomenator = $this->EE->TMPL->fetch_param('denomenator', '1');
+		$denomenator = ($denomenator == 0) ? 1 : $denomenator;
 		$this->return_data = $numerator % $denomenator;
 		return $this->return_data;
 	}
 
 	/** Applies division to passed parameters, then rounds up. */
 	function ceil_divide() {
-		$numerator = $this->EE->TMPL->fetch_param('numerator');
-		$denomenator = $this->EE->TMPL->fetch_param('denomenator');
+		$numerator = $this->EE->TMPL->fetch_param('numerator', '1');
+		$denomenator = $this->EE->TMPL->fetch_param('denomenator', '1');
+		$denomenator = ($denomenator == 0) ? 1 : $denomenator;
 		$this->return_data = ceil($numerator / $denomenator);
 		return $this->return_data;
 	}
