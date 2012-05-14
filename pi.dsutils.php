@@ -169,11 +169,13 @@ class Dsutils {
 		$increment = (int) $this->EE->TMPL->fetch_param('increment', '1');
 
 		$variables = array();
+		$j = 1;
 		for ($i = 1; $i <= $iters; $i += $increment) {
 			$variables[] = array(
-				'current' => $i,
+				'current' => $j,
 				'total' => $iters
 			);
+			$j++;
 		}
 
 		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
