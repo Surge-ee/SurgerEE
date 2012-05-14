@@ -165,13 +165,14 @@ class Dsutils {
 
 	/** Just loops a certain number of times. */
 	function loop() {
-		$iters = (int) $this->EE->TMPL->fetch_param('iterations', '');
+		$iters = (int) $this->EE->TMPL->fetch_param('iterations', '1');
+		$increment = (int) $this->EE->TMPL->fetch_param('increment', '1');
 
 		$variables = array();
-		for ($i = 1; $i <= $iters; $i++) {
+		for ($i = 1; $i <= $iters; $i += $increment) {
 			$variables[] = array(
-				'count' => $i,
-				'total_results' => $iters
+				'current' => $i,
+				'total' => $iters
 			);
 		}
 
