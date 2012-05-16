@@ -185,17 +185,47 @@ class Dsutils {
 	public static function usage() {
 		ob_start();
 ?>
-	Modulo:
+Mathematical
+------------
+
+	=== Modulo ===
 		{exp:dsutils:modulo numerator="4" denominator="3"}
 	Output:
 		1
 
-	Is Halfway:
+	=== Ceil Divide ===
+		{exp:dsutils:ceil_divide numerator="4" denomenator="3"}
+	Output:
+		2
+
+Logical
+-------
+
+	=== Is Halfway ===
 		{exp:dsutils:is_halfway count="5" total="9"}
 	Output:
 		y
 
-	Replace:
+	=== Years ===
+		{exp:dsutils:years channel="blog"}
+			<li>{year}</li>
+		{/exp:dsutils:years}
+	Output:
+		<li>2011</li>
+		<li>2010</li>
+		...
+
+	=== Loop ===
+		{exp:dsutils:loop iterations="8" increment="4"}
+			{current}
+		{/exp:dsutils:loop}
+	Output:
+		1
+		2
+String Manipulation
+-------------------
+
+	=== Replace ===
 		{exp:dsutils:replace regex="foo" reaplce="bar"}
 			Something foo.
 		{/exp:dsutils:replace}
@@ -204,19 +234,12 @@ class Dsutils {
 	Output:
 		Something bar.
 
-	Match:
+	=== Match ===
 		{exp:dsutils:match string="foo" regex="^[f]"}
 	Output:
 		y
 
-	Years:
-		{exp:dsutils:years channel="blog"}
-			<li>{year}</li>
-		{/exp:dsutils:years}
-	Output:
-		<li>2011</li>
-		<li>2010</li>
-		...
+
 <?php
 		$buffer = ob_get_contents();
 		ob_end_clean();
