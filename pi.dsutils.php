@@ -26,7 +26,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'DSUtils',
-	'pi_version'	=> '1.1.0',
+	'pi_version'	=> '1.2.0',
 	'pi_author'		=> 'Daniel Poulin',
 	'pi_author_url'	=> 'http://github.com/EpocSquadron/dsutils',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
@@ -48,9 +48,19 @@ class Dsutils {
 	 * Useful for outputting stuff every third, fourth, etc entry in
 	 * a loop. */
 	function modulo() {
-		$numerator = $this->EE->TMPL->fetch_param('numerator');
-		$denomenator = $this->EE->TMPL->fetch_param('denomenator');
+		$numerator = $this->EE->TMPL->fetch_param('numerator', '1');
+		$denomenator = $this->EE->TMPL->fetch_param('denomenator', '1');
+		$denomenator = ($denomenator == 0) ? 1 : $denomenator;
 		$this->return_data = $numerator % $denomenator;
+		return $this->return_data;
+	}
+
+	/** Applies division to passed parameters, then rounds up. */
+	function ceil_divide() {
+		$numerator = $this->EE->TMPL->fetch_param('numerator', '1');
+		$denomenator = $this->EE->TMPL->fetch_param('denomenator', '1');
+		$denomenator = ($denomenator == 0) ? 1 : $denomenator;
+		$this->return_data = ceil($numerator / $denomenator);
 		return $this->return_data;
 	}
 
@@ -82,7 +92,7 @@ class Dsutils {
 						ON (c.`channel_id` = t.`channel_id`) WHERE ";
 		// If excluding year, do it now
 		if ($exclude_current_year) {
-			$current_year = date('%Y');
+			$current_year = date('Y');
 			$sql .= " t.`year` != '$current_year' AND ";
 		}
 		// Add which channel it should come from
@@ -153,21 +163,69 @@ class Dsutils {
 		return $this->return_data;
 	}
 
+	/** Just loops a certain number of times. */
+	function loop() {
+		$iters = (int) $this->EE->TMPL->fetch_param('iterations', '1');
+		$increment = (int) $this->EE->TMPL->fetch_param('increment', '1');
+
+		$variables = array();
+		$j = 1;
+		for ($i = 1; $i <= $iters; $i += $increment) {
+			$variables[] = array(
+				'current' => $j,
+				'total' => $iters
+			);
+			$j++;
+		}
+
+		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
+	}
+
 	// -- Plugin Usage -- //
 	public static function usage() {
 		ob_start();
 ?>
-	Modulo:
+Mathematical
+------------
+
+	=== Modulo ===
 		{exp:dsutils:modulo numerator="4" denominator="3"}
 	Output:
 		1
 
-	Is Halfway:
+	=== Ceil Divide ===
+		{exp:dsutils:ceil_divide numerator="4" denomenator="3"}
+	Output:
+		2
+
+Logical
+-------
+
+	=== Is Halfway ===
 		{exp:dsutils:is_halfway count="5" total="9"}
 	Output:
 		y
 
-	Replace:
+	=== Years ===
+		{exp:dsutils:years channel="blog"}
+			<li>{year}</li>
+		{/exp:dsutils:years}
+	Output:
+		<li>2011</li>
+		<li>2010</li>
+		...
+
+	=== Loop ===
+		{exp:dsutils:loop iterations="8" increment="4"}
+			{current}
+		{/exp:dsutils:loop}
+	Output:
+		1
+		2
+String Manipulation
+-------------------
+
+	=== Replace ===
 		{exp:dsutils:replace regex="foo" reaplce="bar"}
 			Something foo.
 		{/exp:dsutils:replace}
@@ -176,19 +234,12 @@ class Dsutils {
 	Output:
 		Something bar.
 
-	Match:
+	=== Match ===
 		{exp:dsutils:match string="foo" regex="^[f]"}
 	Output:
 		y
 
-	Years:
-		{exp:dsutils:years channel="blog"}
-			<li>{year}</li>
-		{/exp:dsutils:years}
-	Output:
-		<li>2011</li>
-		<li>2010</li>
-		...
+
 <?php
 		$buffer = ob_get_contents();
 		ob_end_clean();
