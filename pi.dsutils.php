@@ -26,7 +26,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'DSUtils',
-	'pi_version'	=> '1.1.0',
+	'pi_version'	=> '1.2.0',
 	'pi_author'		=> 'Daniel Poulin',
 	'pi_author_url'	=> 'http://github.com/EpocSquadron/dsutils',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
