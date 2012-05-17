@@ -26,7 +26,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'DSUtils',
-	'pi_version'	=> '1.2.0',
+	'pi_version'	=> '1.3.0',
 	'pi_author'		=> 'Daniel Poulin',
 	'pi_author_url'	=> 'http://github.com/EpocSquadron/dsutils',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
@@ -181,6 +181,21 @@ class Dsutils {
 		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
 	}
 
+	function url_title_2_entry_id() {
+		$url_title = $this->EE->TMPL->fetch_param('url_title', '');
+
+		$sql = "SELECT `entry_id` FROM `{$this->EE->db->dbprefix}channel_titles` WHERE `url_title`=?;";
+		$q = $this->EE->db->query($sql, array($url_title));
+
+		if ($q->num_rows() > 0) {
+			$this->return_data = $q->row()->entry_id;
+		} else {
+			$this->return_data = '';
+		}
+
+		return $this->return_data;
+	}
+
 	// -- Plugin Usage -- //
 	public static function usage() {
 		ob_start();
@@ -222,6 +237,12 @@ Logical
 	Output:
 		1
 		2
+
+	=== Url_title to Entry_id ===
+		{exp:dsutils:url_title_2_entry_id url_title="{segment_3}"}
+	Output:
+		14
+
 String Manipulation
 -------------------
 
