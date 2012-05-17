@@ -181,6 +181,21 @@ class Dsutils {
 		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
 	}
 
+	function url_title_2_entry_id() {
+		$url_title = $this->EE->TMPL->fetch_param('url_title', '');
+
+		$sql = "SELECT `entry_id` FROM `{$this->EE->db->dbprefix}channel_titles` WHERE `url_title`=?;";
+		$q = $this->EE->db->query($sql, array($url_title));
+
+		if ($q->num_rows() > 0) {
+			$this->return_data = $q->row()->entry_id;
+		} else {
+			$this->return_data = '';
+		}
+
+		return $this->return_data;
+	}
+
 	// -- Plugin Usage -- //
 	public static function usage() {
 		ob_start();
