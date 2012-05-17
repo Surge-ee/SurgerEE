@@ -237,6 +237,12 @@ Logical
 	Output:
 		1
 		2
+
+	=== Url_title to Entry_id ===
+		{exp:dsutils:url_title_2_entry_id url_title="{segment_3}"}
+	Output:
+		14
+
 String Manipulation
 -------------------
 
