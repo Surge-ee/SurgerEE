@@ -26,7 +26,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'DSUtils',
-	'pi_version'	=> '1.2.0',
+	'pi_version'	=> '1.3.0',
 	'pi_author'		=> 'Daniel Poulin',
 	'pi_author_url'	=> 'http://github.com/EpocSquadron/dsutils',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
@@ -237,6 +237,12 @@ Logical
 	Output:
 		1
 		2
+
+	=== Url_title to Entry_id ===
+		{exp:dsutils:url_title_2_entry_id url_title="{segment_3}"}
+	Output:
+		14
+
 String Manipulation
 -------------------
 
