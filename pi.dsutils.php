@@ -87,8 +87,8 @@ class Dsutils {
 
 		// Prepare query
 		$sql = "SELECT t.`year`
-				FROM `{$this->EE->db->dbprefix}channel_titles` AS t
-					JOIN `{$this->EE->db->dbprefix}channels` AS c
+				FROM `exp_channel_titles` AS t
+					JOIN `exp_channels` AS c
 						ON (c.`channel_id` = t.`channel_id`) WHERE ";
 		// If excluding year, do it now
 		if ($exclude_current_year) {
@@ -184,7 +184,7 @@ class Dsutils {
 	function url_title_2_entry_id() {
 		$url_title = $this->EE->TMPL->fetch_param('url_title', '');
 
-		$sql = "SELECT `entry_id` FROM `{$this->EE->db->dbprefix}channel_titles` WHERE `url_title`=?;";
+		$sql = "SELECT `entry_id` FROM `exp_channel_titles` WHERE `url_title`=?;";
 		$q = $this->EE->db->query($sql, array($url_title));
 
 		if ($q->num_rows() > 0) {
