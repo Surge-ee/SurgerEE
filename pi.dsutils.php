@@ -195,6 +195,17 @@ class Dsutils {
 
 		return $this->return_data;
 	}
+	
+	/* 
+		Strip HTML out of content. Can optionally allow html tags
+		Wrapper for @Link: http://us.php.net/strip_tags
+	 */
+	function strip_tags() {
+		$allowed_tags = $this->EE->TMPL->fetch_param('allowed_tags', '');
+		$this->return_data = strip_tags($this->EE->TMPL->tagdata, $allowed_tags);
+		
+		return $this->return_data;
+	}
 
 	/** Attempts to make a proper title out of a url_title not associated with a entry. */
 	function proper_title() {
@@ -267,7 +278,25 @@ String Manipulation
 		{exp:dsutils:match string="foo" regex="^[f]"}
 	Output:
 		y
-
+		
+	=== Strip Tags ===
+		Example 1: Strip HTML
+		{exp:dsutils:strip_tags}
+			<p>Some HTML Content. These P tag will be taken out.</p>
+		{/exp:dsutils:strip_tags}
+		
+		Example 1: Keep certain HTML tags:
+		{exp:dsutils:strip_tags allowed_tags="<img>"}
+			<p>Some HTML Content. ONLY the image tag only will be kept.</p>
+			<p><img src="http://placehold.it/300x300" alt="" /></p>
+		{/exp:dsutils:strip_tags}
+		
+		Example 3: Keep multiple HTML tags:
+		{exp:dsutils:strip_tags allowed_tags="<img> <iframe>"}
+			<p>Some HTML Content. ONLY the image tag only will be kept.</p>
+			<p><img src="http://placehold.it/300x300" alt="" /></p>
+			<iframe src="http://example.com">This stays too!</iframe>
+		{/exp:dsutils:strip_tags}
 
 <?php
 		$buffer = ob_get_contents();
