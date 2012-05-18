@@ -217,95 +217,10 @@ class Surgeree {
 
 	// -- Plugin Usage -- //
 	public static function usage() {
-		ob_start();
-?>
-Mathematical
-------------
+		$buffer = "See documentation on github.";
+		/*$readme_file = ltrim(dirname(__FILE__), '/').'/README.md';
+		$buffer = file_get_contents($readme_file);*/
 
-	=== Modulo ===
-		{exp:surgeree:modulo numerator="4" denominator="3"}
-	Output:
-		1
-
-	=== Ceil Divide ===
-		{exp:surgeree:ceil_divide numerator="4" denomenator="3"}
-	Output:
-		2
-
-Logical
--------
-
-	=== Is Halfway ===
-		{exp:surgeree:is_halfway count="5" total="9"}
-	Output:
-		y
-
-	=== Years ===
-		{exp:surgeree:years channel="blog"}
-			<li>{year}</li>
-		{/exp:surgeree:years}
-	Output:
-		<li>2011</li>
-		<li>2010</li>
-		...
-
-	=== Loop ===
-		{exp:surgeree:loop iterations="8" increment="4"}
-			{current}
-		{/exp:surgeree:loop}
-	Output:
-		1
-		2
-
-	=== Url_title to Entry_id ===
-		{exp:surgeree:url_title_2_entry_id url_title="{segment_3}"}
-	Output:
-		14
-
-String Manipulation
--------------------
-
-	=== Replace ===
-		{exp:surgeree:replace regex="foo" reaplce="bar"}
-			Something foo.
-		{/exp:surgeree:replace}
-		OR
-		{exp:surgeree:replace string="Something foo." regex="foo" reaplce="bar"}
-	Output:
-		Something bar.
-
-	=== Match ===
-		{exp:surgeree:match string="foo" regex="^[f]"}
-	Output:
-		y
-
-	=== Proper Title ===
-		{exp:surgeree:proper_title url_title="some_title"}
-	Output:
-		Some Title
-
-	=== Strip Tags ===
-		Example 1: Strip HTML
-		{exp:surgeree:strip_tags}
-			<p>Some HTML Content. These P tag will be taken out.</p>
-		{/exp:surgeree:strip_tags}
-
-		Example 1: Keep certain HTML tags:
-		{exp:surgeree:strip_tags allowed_tags="<img>"}
-			<p>Some HTML Content. ONLY the image tag only will be kept.</p>
-			<p><img src="http://placehold.it/300x300" alt="" /></p>
-		{/exp:surgeree:strip_tags}
-
-		Example 3: Keep multiple HTML tags:
-		{exp:surgeree:strip_tags allowed_tags="<img> <iframe>"}
-			<p>Some HTML Content. ONLY the image tag only will be kept.</p>
-			<p><img src="http://placehold.it/300x300" alt="" /></p>
-			<iframe src="http://example.com">This stays too!</iframe>
-		{/exp:surgeree:strip_tags}
-
-<?php
-		$buffer = ob_get_contents();
-		ob_end_clean();
 		return $buffer;
 	}
 }
