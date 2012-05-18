@@ -196,6 +196,14 @@ class Dsutils {
 		return $this->return_data;
 	}
 
+	/** Attempts to make a proper title out of a url_title not associated with a entry. */
+	function proper_title() {
+		$url_title = $this->EE->TMPL->fetch_param('url_title', '');
+
+		$this->return_data = ucwords(preg_replace('/[_-]/', ' ', $url_title));
+		return $this->return_data;
+	}
+
 	// -- Plugin Usage -- //
 	public static function usage() {
 		ob_start();
