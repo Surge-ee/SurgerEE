@@ -1,4 +1,6 @@
-dsutils
-=======
+SurgerEE
+--------
 
-A collection of simple tags for expressionengine that make template development easier.
+A collection of simple tags for expressionengine that make template surgery easier.
+
+

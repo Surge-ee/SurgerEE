@@ -15,26 +15,26 @@
 // ------------------------------------------------------------------------
 
 /**
- * DSUtils Plugin
+ * SurgerEE Plugin
  *
  * @package		ExpressionEngine
  * @subpackage	Addons
  * @category	Plugin
  * @author		Daniel Poulin
- * @link 		http://github.com/EpocSquadron/dsutils Homepage
+ * @link 		http://github.com/EpocSquadron/surgeree Homepage
  */
 
 $plugin_info = array(
-	'pi_name'		=> 'DSUtils',
+	'pi_name'		=> 'SurgerEE',
 	'pi_version'	=> '1.3.0',
 	'pi_author'		=> 'Daniel Poulin',
-	'pi_author_url'	=> 'http://github.com/EpocSquadron/dsutils',
+	'pi_author_url'	=> 'http://github.com/EpocSquadron/surgeree',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
-	'pi_usage'		=> Dsutils::usage()
+	'pi_usage'		=> Surgeree::usage()
 );
 
 
-class Dsutils {
+class Surgeree {
 
 	public $return_data;
 
@@ -195,15 +195,15 @@ class Dsutils {
 
 		return $this->return_data;
 	}
-	
-	/* 
+
+	/*
 		Strip HTML out of content. Can optionally allow html tags
 		Wrapper for @Link: http://us.php.net/strip_tags
 	 */
 	function strip_tags() {
 		$allowed_tags = $this->EE->TMPL->fetch_param('allowed_tags', '');
 		$this->return_data = strip_tags($this->EE->TMPL->tagdata, $allowed_tags);
-		
+
 		return $this->return_data;
 	}
 
@@ -223,12 +223,12 @@ Mathematical
 ------------
 
 	=== Modulo ===
-		{exp:dsutils:modulo numerator="4" denominator="3"}
+		{exp:surgeree:modulo numerator="4" denominator="3"}
 	Output:
 		1
 
 	=== Ceil Divide ===
-		{exp:dsutils:ceil_divide numerator="4" denomenator="3"}
+		{exp:surgeree:ceil_divide numerator="4" denomenator="3"}
 	Output:
 		2
 
@@ -236,29 +236,29 @@ Logical
 -------
 
 	=== Is Halfway ===
-		{exp:dsutils:is_halfway count="5" total="9"}
+		{exp:surgeree:is_halfway count="5" total="9"}
 	Output:
 		y
 
 	=== Years ===
-		{exp:dsutils:years channel="blog"}
+		{exp:surgeree:years channel="blog"}
 			<li>{year}</li>
-		{/exp:dsutils:years}
+		{/exp:surgeree:years}
 	Output:
 		<li>2011</li>
 		<li>2010</li>
 		...
 
 	=== Loop ===
-		{exp:dsutils:loop iterations="8" increment="4"}
+		{exp:surgeree:loop iterations="8" increment="4"}
 			{current}
-		{/exp:dsutils:loop}
+		{/exp:surgeree:loop}
 	Output:
 		1
 		2
 
 	=== Url_title to Entry_id ===
-		{exp:dsutils:url_title_2_entry_id url_title="{segment_3}"}
+		{exp:surgeree:url_title_2_entry_id url_title="{segment_3}"}
 	Output:
 		14
 
@@ -266,37 +266,42 @@ String Manipulation
 -------------------
 
 	=== Replace ===
-		{exp:dsutils:replace regex="foo" reaplce="bar"}
+		{exp:surgeree:replace regex="foo" reaplce="bar"}
 			Something foo.
-		{/exp:dsutils:replace}
+		{/exp:surgeree:replace}
 		OR
-		{exp:dsutils:replace string="Something foo." regex="foo" reaplce="bar"}
+		{exp:surgeree:replace string="Something foo." regex="foo" reaplce="bar"}
 	Output:
 		Something bar.
 
 	=== Match ===
-		{exp:dsutils:match string="foo" regex="^[f]"}
+		{exp:surgeree:match string="foo" regex="^[f]"}
 	Output:
 		y
-		
+
+	=== Proper Title ===
+		{exp:surgeree:proper_title url_title="some_title"}
+	Output:
+		Some Title
+
 	=== Strip Tags ===
 		Example 1: Strip HTML
-		{exp:dsutils:strip_tags}
+		{exp:surgeree:strip_tags}
 			<p>Some HTML Content. These P tag will be taken out.</p>
-		{/exp:dsutils:strip_tags}
-		
+		{/exp:surgeree:strip_tags}
+
 		Example 1: Keep certain HTML tags:
-		{exp:dsutils:strip_tags allowed_tags="<img>"}
+		{exp:surgeree:strip_tags allowed_tags="<img>"}
 			<p>Some HTML Content. ONLY the image tag only will be kept.</p>
 			<p><img src="http://placehold.it/300x300" alt="" /></p>
-		{/exp:dsutils:strip_tags}
-		
+		{/exp:surgeree:strip_tags}
+
 		Example 3: Keep multiple HTML tags:
-		{exp:dsutils:strip_tags allowed_tags="<img> <iframe>"}
+		{exp:surgeree:strip_tags allowed_tags="<img> <iframe>"}
 			<p>Some HTML Content. ONLY the image tag only will be kept.</p>
 			<p><img src="http://placehold.it/300x300" alt="" /></p>
 			<iframe src="http://example.com">This stays too!</iframe>
-		{/exp:dsutils:strip_tags}
+		{/exp:surgeree:strip_tags}
 
 <?php
 		$buffer = ob_get_contents();
@@ -306,5 +311,5 @@ String Manipulation
 }
 
 
-/* End of file pi.dsutils.php */
-/* Location: /system/expressionengine/third_party/dsutils/pi.dsutils.php */
+/* End of file pi.surgeree.php */
+/* Location: /system/expressionengine/third_party/surgeree/pi.surgeree.php */
