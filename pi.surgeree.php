@@ -21,6 +21,7 @@
  * @subpackage	Addons
  * @category	Plugin
  * @author		Daniel Poulin
+ * @author 		Chris Fidao
  * @link 		http://github.com/EpocSquadron/surgeree Homepage
  * @license
  * This Source Code Form is subject to the terms of the Mozilla Public
