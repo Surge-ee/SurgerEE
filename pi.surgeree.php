@@ -21,12 +21,17 @@
  * @subpackage	Addons
  * @category	Plugin
  * @author		Daniel Poulin
+ * @author 		Chris Fidao
  * @link 		http://github.com/EpocSquadron/surgeree Homepage
+ * @license
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 $plugin_info = array(
 	'pi_name'		=> 'SurgerEE',
-	'pi_version'	=> '1.3.0',
+	'pi_version'	=> '1.4.1',
 	'pi_author'		=> 'Daniel Poulin',
 	'pi_author_url'	=> 'http://github.com/EpocSquadron/surgeree',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
