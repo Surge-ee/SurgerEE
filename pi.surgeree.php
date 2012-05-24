@@ -32,7 +32,7 @@
 $plugin_info = array(
 	'pi_name'		=> 'SurgerEE',
 	'pi_version'	=> '1.4.2',
-	'pi_author'		=> 'Daniel Poulin',
+	'pi_author'		=> 'Digital Surgeons',
 	'pi_author_url'	=> 'http://github.com/dsurgeons/SurgerEE',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
 	'pi_usage'		=> Surgeree::usage()
