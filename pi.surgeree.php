@@ -130,14 +130,17 @@ class Surgeree {
 		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
 	}
 
-	/** Checks if an integer is halfway rounded up through the total.
+	/** Checks if an integer is halfway rounded up or down through the total.
 	 *
 	 * Useful for determining if you are halfway through a loop. */
 	function is_halfway() {
 		$count = $this->EE->TMPL->fetch_param('count');
 		$total = $this->EE->TMPL->fetch_param('total');
+		$round = $this->EE->TMPL->fetch_param('round', 'up');
 
-		if (is_numeric($count) && is_numeric($total) && $count == ceil($total / 2)) {
+		if (!is_numeric($count) || !is_numeric($total)) return '';
+
+		if ( ($round == 'up' && $count == ceil($total / 2)) || ($round == 'down' && $count == floor($total / 2)) ) {
 			$this->return_data = 'y';
 		} else {
 			$this->return_data = 'n';
