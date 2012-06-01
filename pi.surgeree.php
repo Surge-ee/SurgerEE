@@ -69,6 +69,42 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	/** Helper function replacing number_format accounting for groupings other than thousands.
+	 *
+	 * Taken from php documentation comments. @see http://php.net/manual/en/function.number-format.php#95293
+	 */
+	protected function _betterNumberFormat($number, $precision, $decimal, $separator, $groupsize) {
+		$number = sprintf("%0.{$precision}f",$number);
+		$number = explode('.',$number);
+		while (strlen($number[0]) % $groupsize) $number[0]= ' '.$number[0];
+		$number[0] = str_split($number[0],$groupsize);
+		$number[0] = join($separator[0],$number[0]);
+		$number[0] = trim($number[0]);
+		$number = join($decimal[0],$number);
+
+		return $number;
+	}
+
+	function format_number() {
+		// Get the number to apply this to.
+		$number = trim($this->EE->TMPL->fetch_param('number', ''));
+		// Need to resolve issues with optional tag pairing before
+		// accepting numbers from within.
+		//$tagdata = trim($this->EE->TMPL->tagdata);
+		//$number = (is_numeric($tagdata) && $param == '') ? $tagdata : $param ;
+		if (!is_numeric($number)) return '';
+
+		// Get settings for number_format
+		$precision = $this->EE->TMPL->fetch_param('precision', '2');
+		$decimal = $this->EE->TMPL->fetch_param('decimal', '.');
+		$separator = $this->EE->TMPL->fetch_param('separator', ',');
+		$groupsize = $this->EE->TMPL->fetch_param('groupsize', '3');
+
+		$this->return_data = $this->_betterNumberFormat($number, $precision, $decimal, $separator, $groupsize);
+
+		return $this->return_data;
+	}
+
 	/** A looping tag returning all of the years for which there are entries.
 	 *
 	 * Very useful for generating archive links based on calendar year.
