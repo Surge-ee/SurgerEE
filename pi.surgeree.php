@@ -60,12 +60,13 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** Applies division to passed parameters, then rounds up. */
-	function ceil_divide() {
-		$numerator = $this->EE->TMPL->fetch_param('numerator', '1');
-		$denominator = $this->EE->TMPL->fetch_param('denominator', '1');
-		$denominator = ($denominator == 0) ? 1 : $denominator;
-		$this->return_data = ceil($numerator / $denominator);
+	/** Generic divide-then-round. */
+	function round_divide() {
+		$numerator = (int) $this->EE->TMPL->fetch_param('numerator', '1');
+		$denominator = (int) $this->EE->TMPL->fetch_param('denominator', '1');
+		$round = $this->EE->TMPL->fetch_param('round', 'up');
+		$denominator = ($denominator === 0) ? 1 : $denominator;
+		$this->return_data = ($round === 'up') ? ceil($numerator / $denominator) : floor($numerator / $denominator);
 		return $this->return_data;
 	}
 
