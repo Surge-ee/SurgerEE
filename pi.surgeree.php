@@ -259,6 +259,19 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	function all_segments() {
+		return $this->EE->uri->uri_string();
+	}
+
+	function total_segments() {
+		return $this->EE->uri->total_segments();
+	}
+
+	function current_url() {
+		$this->EE->load->helper('url');
+		return current_url();
+	}
+
 	// -- Plugin Usage -- //
 	public static function usage() {
 		$buffer = "See documentation on github.";
