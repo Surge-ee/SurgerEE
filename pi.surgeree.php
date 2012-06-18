@@ -225,6 +225,38 @@ class Surgeree {
 		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
 	}
 
+	/** Loops enough times to make a completed parent loop divisible by a number.
+	 *
+	 * Useful for instance in a carousel which is getting dummy slides filled in
+	 * to make each page have a certain number of slides.  Say the carousel takes
+	 * 10 slides, but only 7 are present. This loop will run 3 times in that
+	 * instance to allow you to output dummy slides.
+	 *
+	 * @param int total Total number of items that exist.
+	 * @param int make_divisible_by Number that the padded total will be divisible by.
+	 */
+	function loop_fill() {
+		$numerator = (int) $this->EE->TMPL->fetch_param('total', '1');
+		$denominator = (int) $this->EE->TMPL->fetch_param('make_divisible_by', '1');
+		$denominator = ($denominator === 0) ? 1 : $denominator;
+		$needed_iterations = $denominator - ($numerator % $denominator);
+		$needed_iterations = ($needed_iterations === $denominator) ? 0 : $needed_iterations;
+
+		$variables = array();
+		$j = 1;
+		for ($i = 1; $i <= $needed_iterations; $i += 1) {
+			$variables[] = array(
+				'current' => $j,
+				'total' => $needed_iterations
+			);
+			$j++;
+		}
+
+		$this->return_data = (empty($variables)) ? '' : $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
+
+		return $this->return_data;
+	}
+
 	function url_title_2_entry_id() {
 		$url_title = $this->EE->TMPL->fetch_param('url_title', '');
 
