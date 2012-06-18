@@ -85,6 +85,7 @@ class Surgeree {
 		return $number;
 	}
 
+	/** Formats a passed number in specified format. Useful for localization. */
 	function format_number() {
 		// Get the number to apply this to.
 		$number = trim($this->EE->TMPL->fetch_param('number', ''));
