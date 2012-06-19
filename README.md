@@ -3,6 +3,20 @@ SurgerEE
 
 A collection of simple tags for expressionengine that make template surgery easier.
 
+## Installation
+
+### Simple Installation
+
+Simply copy the `pi.surgeree.php` file into a directory called `surgeree` inside the third_party folder of your ExpressionEngine installation.
+
+### Fancy Installation (for git users)
+
+Make this repo into a submodule for your project's private ExpressionEngine git repo.
+
+	git submodule add git://github.com/dsurgeons/SurgerEE.git system/expressionengine/third_party/surgeree
+
+For added flexiblity, fork this repo and make the submodule to your fork instead. Don't forget to submit pull requests after you've added stuff :).
+
 ## Mathematical Helpers
 
 ### Modulo
@@ -14,14 +28,23 @@ Output:
 
 	1
 
-### Ceil Divide
-Applies division to passed parameters, then rounds up.
+### Round Divide
+Applies division to passed parameters, then rounds up or down. Defaults to up.
 
-	{exp:surgeree:ceil_divide numerator="4" denomenator="3"}
+	{exp:surgeree:round_divide numerator="4" denominator="3" [round="up|down"]}
 
 Output:
 
 	2
+
+### Format Number
+Formats numbers according to passed parameters. Useful for localization.
+
+	{exp:surgeree:format_number number="12343.90" precision="1" decimal="," separator="'" groupsize="4"}
+
+Output:
+
+	1'2343,9
 
 ## Logical Helpers
 
@@ -59,6 +82,18 @@ Output:
 	1
 	2
 
+### Loop Fill
+A loop designed to allow padding of a parent loop based on what number you want to make the parent's total divisible by. An example might be a carousel which is being populated with slides from a matrix field, but which needs to output dummy slides to make the number of slides in each page of the carousel equal.
+
+	{some_matrix_field}
+	<!-- Slide content -->
+		{if row_count == total_rows}
+			{exp:surgeree:loop_fill total="{total_rows}" make_divisible_by="10"}
+				<!-- Dummy/filler slide content -->
+			{/exp:surgeree:loop_fill}
+		{/if}
+	{/some_matrix_field}
+
 ### Url_title to Entry_id
 Simply outputs the entry_id associated with a url_title.
 
@@ -67,6 +102,29 @@ Simply outputs the entry_id associated with a url_title.
 Output:
 
 	14
+
+### All Segments
+The entire uri string.
+
+	{exp:surgeree:all_segments}
+
+Output:
+
+	something/category/blue/4325
+
+### Total Segments
+The number of segments in the url.
+
+	{exp:surgeree:total_segments}
+
+### Current URL
+The entire url string.
+
+	{exp:surgeree:current_url}
+
+Output:
+
+	http://www.somewhere.dom/something
 
 ## String Manipulation Helpers
 
