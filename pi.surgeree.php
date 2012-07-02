@@ -31,7 +31,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'SurgerEE',
-	'pi_version'	=> '1.5.0',
+	'pi_version'	=> '1.5.1',
 	'pi_author'		=> 'Digital Surgeons',
 	'pi_author_url'	=> 'http://github.com/dsurgeons/SurgerEE',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
@@ -214,12 +214,14 @@ class Surgeree {
 		$iters = (int) $this->EE->TMPL->fetch_param('iterations', '1');
 		$increment = (int) $this->EE->TMPL->fetch_param('increment', '1');
 
+		$total = floor($iters/$increment);
+
 		$variables = array();
 		$j = 1;
 		for ($i = 1; $i <= $iters; $i += $increment) {
 			$variables[] = array(
 				'current' => $j,
-				'total' => $iters
+				'total' => $total
 			);
 			$j++;
 		}
@@ -311,7 +313,7 @@ class Surgeree {
 
 	// -- Plugin Usage -- //
 	public static function usage() {
-		$buffer = "See documentation on github.";
+		$buffer = 'See documentation on <a href="https://github.com/dsurgeons/SurgerEE/wiki">github</a>.';
 		/*$readme_file = ltrim(dirname(__FILE__), '/').'/README.md';
 		$buffer = file_get_contents($readme_file);*/
 
