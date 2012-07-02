@@ -311,6 +311,18 @@ class Surgeree {
 		return current_url();
 	}
 
+	/** Ensures presence of http in a url, to prevent urls from pointing to wrong domain. */
+	function ensure_http() {
+		$this->return_data = $this->EE->TMPL->tagdata;
+		if ($this->return_data == '') return '';
+
+		if (strpos($this->return_data, 'http://') === FALSE) {
+			$this->return_data = 'http://'.$this->return_data;
+		}
+
+		return $this->return_data;
+	}
+
 	// -- Plugin Usage -- //
 	public static function usage() {
 		$buffer = 'See documentation on <a href="https://github.com/dsurgeons/SurgerEE/wiki">github</a>.';
