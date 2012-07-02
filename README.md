@@ -23,6 +23,10 @@ Please see the [wiki](https://github.com/dsurgeons/SurgerEE/wiki) for in depth d
 
 ## Changelog
 
+Version 1.5.2
+
+ - Add method for ensuring http is in a url.
+
 Version 1.5.1
 
  - More comprehensive documentation added and moved to the github wiki.
