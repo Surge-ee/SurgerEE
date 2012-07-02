@@ -31,7 +31,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'SurgerEE',
-	'pi_version'	=> '1.5.0',
+	'pi_version'	=> '1.5.1',
 	'pi_author'		=> 'Digital Surgeons',
 	'pi_author_url'	=> 'http://github.com/dsurgeons/SurgerEE',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
@@ -313,7 +313,7 @@ class Surgeree {
 
 	// -- Plugin Usage -- //
 	public static function usage() {
-		$buffer = "See documentation on github.";
+		$buffer = 'See documentation on <a href="https://github.com/dsurgeons/SurgerEE/wiki">github</a>.';
 		/*$readme_file = ltrim(dirname(__FILE__), '/').'/README.md';
 		$buffer = file_get_contents($readme_file);*/
 
