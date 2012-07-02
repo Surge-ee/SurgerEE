@@ -214,12 +214,14 @@ class Surgeree {
 		$iters = (int) $this->EE->TMPL->fetch_param('iterations', '1');
 		$increment = (int) $this->EE->TMPL->fetch_param('increment', '1');
 
+		$total = floor($iters/$increment);
+
 		$variables = array();
 		$j = 1;
 		for ($i = 1; $i <= $iters; $i += $increment) {
 			$variables[] = array(
 				'current' => $j,
-				'total' => $iters
+				'total' => $total
 			);
 			$j++;
 		}
