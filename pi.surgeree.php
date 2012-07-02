@@ -31,7 +31,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'SurgerEE',
-	'pi_version'	=> '1.5.1',
+	'pi_version'	=> '1.5.2',
 	'pi_author'		=> 'Digital Surgeons',
 	'pi_author_url'	=> 'http://github.com/dsurgeons/SurgerEE',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
@@ -309,6 +309,18 @@ class Surgeree {
 	function current_url() {
 		$this->EE->load->helper('url');
 		return current_url();
+	}
+
+	/** Ensures presence of http in a url, to prevent urls from pointing to wrong domain. */
+	function ensure_http() {
+		$this->return_data = $this->EE->TMPL->tagdata;
+		if ($this->return_data == '') return '';
+
+		if (strpos($this->return_data, 'http://') === FALSE) {
+			$this->return_data = 'http://'.$this->return_data;
+		}
+
+		return $this->return_data;
 	}
 
 	// -- Plugin Usage -- //
