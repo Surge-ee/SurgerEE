@@ -70,6 +70,20 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	/** Grab value of a get variable */
+	function get() {
+		$key = $this->EE->TMPL->fetch_param('varname');
+		$this->return_data = $this->EE->input->get($key);
+		return $this->return_data;
+	}
+
+	/** Grab value of a post variable */
+	function post() {
+		$key = $this->EE->TMPL->fetch_param('varname');
+		$this->return_data = $this->EE->input->get($key);
+		return $this->return_data;
+	}
+
 	/** Helper function replacing number_format accounting for groupings other than thousands.
 	 *
 	 * Taken from php documentation comments. @see http://php.net/manual/en/function.number-format.php#95293
