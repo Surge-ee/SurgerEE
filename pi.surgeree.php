@@ -31,7 +31,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'SurgerEE',
-	'pi_version'	=> '1.5.2',
+	'pi_version'	=> '1.5.3',
 	'pi_author'		=> 'Digital Surgeons',
 	'pi_author_url'	=> 'http://github.com/dsurgeons/SurgerEE',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
@@ -67,6 +67,20 @@ class Surgeree {
 		$round = $this->EE->TMPL->fetch_param('round', 'up');
 		$denominator = ($denominator === 0) ? 1 : $denominator;
 		$this->return_data = ($round === 'up') ? ceil($numerator / $denominator) : floor($numerator / $denominator);
+		return $this->return_data;
+	}
+
+	/** Grab value of a get variable */
+	function get() {
+		$key = $this->EE->TMPL->fetch_param('varname');
+		$this->return_data = $this->EE->input->get($key);
+		return $this->return_data;
+	}
+
+	/** Grab value of a post variable */
+	function post() {
+		$key = $this->EE->TMPL->fetch_param('varname');
+		$this->return_data = $this->EE->input->get($key);
 		return $this->return_data;
 	}
 
