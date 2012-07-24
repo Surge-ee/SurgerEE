@@ -289,6 +289,21 @@ class Surgeree {
 
 		return $this->return_data;
 	}
+	
+	function entry_id_2_title() {
+		$entry_id = $this->EE->TMPL->fetch_param('entry_id', '');
+
+		$sql = "SELECT `title` FROM `exp_channel_titles` WHERE `entry_id`=?;";
+		$q = $this->EE->db->query($sql, array($entry_id));
+
+		if ($q->num_rows() > 0) {
+			$this->return_data = $q->row()->title;
+		} else {
+			$this->return_data = '';
+		}
+
+		return $this->return_data;
+	}
 
 	/*
 		Strip HTML out of content. Can optionally allow html tags
