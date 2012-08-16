@@ -310,10 +310,31 @@ class Surgeree {
 		Wrapper for @Link: http://us.php.net/strip_tags
 	 */
 	function strip_tags() {
+		
 		$allowed_tags = $this->EE->TMPL->fetch_param('allowed_tags', '');
+		$chars = $this->EE->TMPL->fetch_param('chars');
+		$words = $this->EE->TMPL->fetch_param('words');
+		$append = $this->EE->TMPL->fetch_param('append', '');
+		
 		$this->return_data = strip_tags($this->EE->TMPL->tagdata, $allowed_tags);
-
-		return $this->return_data;
+		if ( !empty($chars) && is_numeric($chars) )
+		{
+			$this->return_data = $this->EE->functions->char_limiter($this->return_data, $chars);
+		}
+		elseif ( !empty($words) && is_numeric($words) )
+		{
+			$this->return_data = $this->EE->functions->word_limiter($this->return_data, $chars);
+		}
+		
+		return $this->return_data . $append;
+	}
+	
+	function url_encode() {
+		$this->return_data = urlencode($this->EE->TMPL->tagdata);
+	}
+	
+	function url_decode() {
+		$this->return_data = urldecode($this->EE->TMPL->tagdata);
 	}
 
 	/** Attempts to make a proper title out of a url_title not associated with a entry. */
