@@ -31,7 +31,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'SurgerEE',
-	'pi_version'	=> '1.5.3',
+	'pi_version'	=> '1.5.4',
 	'pi_author'		=> 'Digital Surgeons',
 	'pi_author_url'	=> 'http://github.com/dsurgeons/SurgerEE',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
@@ -289,16 +289,86 @@ class Surgeree {
 
 		return $this->return_data;
 	}
+	
+	function entry_id_2_title() {
+		$entry_id = $this->EE->TMPL->fetch_param('entry_id', '');
+
+		$sql = "SELECT `title` FROM `exp_channel_titles` WHERE `entry_id`=?;";
+		$q = $this->EE->db->query($sql, array($entry_id));
+
+		if ($q->num_rows() > 0) {
+			$this->return_data = $q->row()->title;
+		} else {
+			$this->return_data = '';
+		}
+
+		return $this->return_data;
+	}
 
 	/*
 		Strip HTML out of content. Can optionally allow html tags
 		Wrapper for @Link: http://us.php.net/strip_tags
 	 */
 	function strip_tags() {
-		$allowed_tags = $this->EE->TMPL->fetch_param('allowed_tags', '');
-		$this->return_data = strip_tags($this->EE->TMPL->tagdata, $allowed_tags);
 
-		return $this->return_data;
+		$allowed_tags = $this->EE->TMPL->fetch_param('allowed_tags', '');
+		$chars = $this->EE->TMPL->fetch_param('chars');
+		$words = $this->EE->TMPL->fetch_param('words');
+		$append = $this->EE->TMPL->fetch_param('append', '');
+
+		$this->return_data = strip_tags($this->EE->TMPL->tagdata, $allowed_tags);
+		if ( !empty($chars) && is_numeric($chars) )
+		{
+			$this->return_data = $this->EE->functions->char_limiter($this->return_data, $chars);
+		}
+		elseif ( !empty($words) && is_numeric($words) )
+		{
+			$this->return_data = $this->EE->functions->word_limiter($this->return_data, $chars);
+		}
+
+		return $this->return_data . $append;
+	}
+
+	function url_encode() {
+		return $this->return_data = urlencode($this->EE->TMPL->tagdata);
+	}
+
+	function url_decode() {
+		return $this->return_data = urldecode($this->EE->TMPL->tagdata);
+	}
+
+	function url_fix() {
+/**
+ * @see  https://github.com/EllisLab/Valid-Url/blob/master/valid_url/pi.valid_url.php
+ */
+		$protected = array('&' => 'AMPERSANDMARKER', '/' => 'SLASHMARKER', '=' => 'EQUALSMARKER');
+
+		$str = str_replace(SLASH, '/', trim(urldecode(str_replace('&amp;', '&', $this->EE->TMPL->tagdata))));
+
+		// really, really bad URL
+		if (($url = @parse_url($str)) === FALSE || (! isset($url['scheme']) && ($url = @parse_url("http://{$str}")) === FALSE) )
+		{
+			$this->EE->TMPL->log_item('Surgeree:url_fix Plugin error: unable to parse URL '.htmlentities($str));
+			return;
+		}
+
+		foreach ($url as $k => $v)
+		{
+			switch($k)
+			{
+				case 'path':
+					$url[$k] = urlencode(str_replace(array_keys($protected), $protected, $v));
+				break;
+				case 'query':
+					$url[$k] = '?'.urlencode(str_replace(array_keys($protected), $protected, $v));
+				break;
+				case 'scheme':
+					$url[$k] .= ($v == 'file') ? ':///' : '://';
+				break;
+			}
+		}
+
+		return $this->return_data = implode('', str_replace('&', '&amp;', str_replace($protected, array_keys($protected), $url)));
 	}
 
 	/** Attempts to make a proper title out of a url_title not associated with a entry. */
