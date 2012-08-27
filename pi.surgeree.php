@@ -330,11 +330,11 @@ class Surgeree {
 	}
 
 	function url_encode() {
-		$this->return_data = urlencode($this->EE->TMPL->tagdata);
+		return $this->return_data = urlencode($this->EE->TMPL->tagdata);
 	}
 
 	function url_decode() {
-		$this->return_data = urldecode($this->EE->TMPL->tagdata);
+		return $this->return_data = urldecode($this->EE->TMPL->tagdata);
 	}
 
 	function url_fix() {
@@ -368,7 +368,7 @@ class Surgeree {
 			}
 		}
 
-		$this->return_data = implode('', str_replace('&', '&amp;', str_replace($protected, array_keys($protected), $url)));
+		return $this->return_data = implode('', str_replace('&', '&amp;', str_replace($protected, array_keys($protected), $url)));
 	}
 
 	/** Attempts to make a proper title out of a url_title not associated with a entry. */
