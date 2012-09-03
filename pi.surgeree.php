@@ -314,7 +314,6 @@ class Surgeree {
 		$allowed_tags = $this->EE->TMPL->fetch_param('allowed_tags', '');
 		$chars = $this->EE->TMPL->fetch_param('chars');
 		$words = $this->EE->TMPL->fetch_param('words');
-		$append = $this->EE->TMPL->fetch_param('append', '');
 
 		$this->return_data = strip_tags($this->EE->TMPL->tagdata, $allowed_tags);
 		if ( !empty($chars) && is_numeric($chars) )
@@ -326,7 +325,7 @@ class Surgeree {
 			$this->return_data = $this->EE->functions->word_limiter($this->return_data, $chars);
 		}
 
-		return $this->return_data . $append;
+		return $this->return_data;
 	}
 
 	function url_encode() {
