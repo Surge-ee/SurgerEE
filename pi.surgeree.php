@@ -73,7 +73,7 @@ class Surgeree {
 	/** Grab value of a get variable */
 	function get() {
 		$key = $this->EE->TMPL->fetch_param('varname');
-		$this->return_data = $this->EE->input->get($key);
+		$this->return_data = $this->EE->input->get($key, TRUE);
 		return $this->return_data;
 	}
 
