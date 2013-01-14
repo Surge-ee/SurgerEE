@@ -25,15 +25,15 @@ Please see the [wiki](https://github.com/dsurgeons/SurgerEE/wiki) for in depth d
 
 The following community members have made contributions to this project:
 
- - @cwcrawley (of Made by Hippo)
+ - [cwcrawley](https://github.com/cwcrawley) (of Made by Hippo)
  	- Variation on regex replace allowing multiple regexes to be applied
- - @robsonsobral
+ - [robsonsobral](https://github.com/robsonsobral)
  	- Start parameter on Loop tag
  	- Add chars and words parameters to Strip_tags
  	- Added url_decode, url_encode, url_fix
- - @ads1018
+ - [ads1018](https://github.com/ads1018)
  	- Add entry_id_2_title
- - @fideloper
+ - [fideloper](https://github.com/fideloper)
  	- Add Strip_tags
 
 ## Changelog
