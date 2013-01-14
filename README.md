@@ -21,7 +21,7 @@ For added flexiblity, fork this repo and make the submodule to your fork instead
 
 Please see the [wiki](https://github.com/dsurgeons/SurgerEE/wiki) for in depth documentation.
 
-## Contributers
+## Contributors
 
 The following community members have made contributions to this project:
 
