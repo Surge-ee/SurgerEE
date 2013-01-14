@@ -331,6 +331,48 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	function string_to_date()
+	{
+		$date_string	= $this->EE->TMPL->fetch_param('string', '');
+		$format 		= $this->EE->TMPL->fetch_param('format', '');
+		$tagdata		= $this->EE->TMPL->tagdata;
+		$localize		= $this->EE->TMPL->fetch_param('localize', FALSE);
+
+		$date_string = ($tagdata != '' && $date_string == '') ? $tagdata : $date_string ;
+
+		$date_constants	= array(
+			'DATE_ATOM'		=>	'%Y-%m-%dT%H:%i:%s%Q',
+			'DATE_COOKIE'	=>	'%l, %d-%M-%y %H:%i:%s UTC',
+			'DATE_ISO8601'	=>	'%Y-%m-%dT%H:%i:%s%Q',
+			'DATE_RFC822'	=>	'%D, %d %M %y %H:%i:%s %O',
+			'DATE_RFC850'	=>	'%l, %d-%M-%y %H:%m:%i UTC',
+			'DATE_RFC1036'	=>	'%D, %d %M %y %H:%i:%s %O',
+			'DATE_RFC1123'	=>	'%D, %d %M %Y %H:%i:%s %O',
+			'DATE_RFC2822'	=>	'%D, %d %M %Y %H:%i:%s %O',
+			'DATE_RSS'		=>	'%D, %d %M %Y %H:%i:%s %O',
+			'DATE_W3C'		=>	'%Y-%m-%dT%H:%i:%s%Q'
+		);
+
+		foreach ($date_constants as $key => $val)
+		{
+			if ( $format === $key)
+			{
+				$format = $val;
+				break;
+			}
+		}
+
+		if ( $unixtime = strtotime($date_string) )
+		{
+			$this->return_data = $this->EE->localize->decode_date($format , $unixtime , $localize );
+		}
+		else
+		{
+			$this->return_data = '';
+		}
+
+		return $this->return_data;
+	}
 	/*
 		Strip HTML out of content. Can optionally allow html tags
 		Wrapper for @Link: http://us.php.net/strip_tags
