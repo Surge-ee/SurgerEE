@@ -397,6 +397,19 @@ class Surgeree {
 		return $this->return_data = implode('', str_replace('&', '&amp;', str_replace($protected, array_keys($protected), $url)));
 	}
 
+	function redirect(){
+		/* using code igniter, since EE->redirect doesn't allow response_code */
+
+		$location			= $this->EE->TMPL->fetch_param('location', '');
+		$response_code		= $this->EE->TMPL->fetch_param('response_code', 302);
+		$redirect_method 	= $this->EE->config->item('redirect_method') == 'refresh'
+							? 'refresh'
+							: 'location';
+		if ( !empty($location) ){
+			$this->EE->load->helper('url');
+			return redirect($location,$redirect_method,$response_code);
+		}
+	}
 	/** Attempts to make a proper title out of a url_title not associated with a entry. */
 	function proper_title() {
 		$url_title = $this->EE->TMPL->fetch_param('url_title', '');
