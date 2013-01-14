@@ -200,6 +200,27 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	function split_string() {
+		$delimiter = $this->EE->TMPL->fetch_param('delimiter', '');
+		$string = $this->EE->TMPL->fetch_param('string', '');
+
+		if ( $delimiter == '' OR $string == '')
+		{
+			return $this->return_data = $this->EE->TMPL->no_results();
+		}
+
+		$vartags = array();
+		$a = explode($delimiter, $string);
+
+		foreach ($a as $v)
+		{
+			$vartags[] =  array('surg:split_string:item' => $v);
+			$this->EE->TMPL->log_item("surgeree:explode:".$string.":item: ".$v);
+		}
+
+		return $this->return_data = $this->EE->TMPL->parse_variables( ltrim($this->EE->TMPL->tagdata), $vartags );
+	}
+
 	/** Performs a regex replace on a string */
 	function replace() {
 		$param = $this->EE->TMPL->fetch_param('string', '');
