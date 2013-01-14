@@ -21,6 +21,21 @@ For added flexiblity, fork this repo and make the submodule to your fork instead
 
 Please see the [wiki](https://github.com/dsurgeons/SurgerEE/wiki) for in depth documentation.
 
+## Contributers
+
+The following community members have made contributions to this project:
+
+ - @cwcrawley (of Made by Hippo)
+ 	- Variation on regex replace allowing multiple regexes to be applied
+ - @robsonsobral
+ 	- Start parameter on Loop tag
+ 	- Add chars and words parameters to Strip_tags
+ 	- Added url_decode, url_encode, url_fix
+ - @ads1018
+ 	- Add entry_id_2_title
+ - @fideloper
+ 	- Add Strip_tags
+
 ## Changelog
 
 Version 1.5.3
