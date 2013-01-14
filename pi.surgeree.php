@@ -362,6 +362,13 @@ class Surgeree {
 		return $this->return_data = urldecode($this->EE->TMPL->tagdata);
 	}
 
+	function raw_url_encode() {
+		return $this->return_data = rawurlencode($this->EE->TMPL->tagdata);
+	}
+
+	function raw_url_decode() {
+		return $this->return_data = rawurldecode($this->EE->TMPL->tagdata);
+	}
 	function url_fix() {
 /**
  * @see  https://github.com/EllisLab/Valid-Url/blob/master/valid_url/pi.valid_url.php
