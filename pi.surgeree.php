@@ -420,6 +420,15 @@ class Surgeree {
 		return current_url();
 	}
 
+	function previous_url() {
+		$default = $this->EE->TMPL->fetch_param('default', '');
+
+		$this->return_data = isset($this->EE->session->tracker[1]) ?
+			($this->EE->session->tracker[1] == 'index' ? '/' : $this->EE->session->tracker[1])
+			: $default;
+
+		return $this->return_data;
+	}
 	/** Ensures presence of http in a url, to prevent urls from pointing to wrong domain. */
 	function ensure_http() {
 		$this->return_data = $this->EE->TMPL->tagdata;
