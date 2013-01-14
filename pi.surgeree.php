@@ -421,6 +421,14 @@ class Surgeree {
 		return current_url();
 	}
 
+	/** Returns the entire uri for the current page, including the first /, to match the behavior of the page_uri of exp:channel:entries. */
+	function current_uri() {
+		$this->EE->load->helper('url');
+		$uri = uri_string();
+		return substr($uri, 0) !== '/'
+				? '/'. $uri
+				: $uri;
+	}
 	function referer() {
 		return $this->EE->input->server('HTTP_REFERER', TRUE);
 	}
