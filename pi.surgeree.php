@@ -316,6 +316,24 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	function entry_id_2_url_title() {
+		$entry_id = $this->EE->TMPL->fetch_param('entry_id', '');
+
+		$this->return_data = '';
+
+		if ( intval($entry_id) !== 0 )
+		{
+			$sql = "SELECT `url_title` FROM `exp_channel_titles` WHERE `entry_id`=?;";
+			$q = $this->EE->db->query($sql, array($entry_id));
+
+			if ($q->num_rows() > 0) {
+				$this->return_data = $q->row()->url_title;
+			}
+		}
+
+		return $this->return_data;
+	}
+
 	function entry_id_2_title() {
 		$entry_id = $this->EE->TMPL->fetch_param('entry_id', '');
 
