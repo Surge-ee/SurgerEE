@@ -336,7 +336,9 @@ class Surgeree {
 		$date_string	= $this->EE->TMPL->fetch_param('string', '');
 		$format 		= $this->EE->TMPL->fetch_param('format', '');
 		$tagdata		= $this->EE->TMPL->tagdata;
-		$localize		= $this->EE->TMPL->fetch_param('localize', FALSE);
+		$localize		= $this->EE->TMPL->fetch_param('localize') == 'yes'
+						? TRUE
+						: FALSE;
 
 		$date_string = ($tagdata != '' && $date_string == '') ? $tagdata : $date_string ;
 
