@@ -420,6 +420,9 @@ class Surgeree {
 		return current_url();
 	}
 
+	function referer() {
+		return $this->EE->input->server('HTTP_REFERER', TRUE);
+	}
 	function previous_url() {
 		$default = $this->EE->TMPL->fetch_param('default', '');
 
