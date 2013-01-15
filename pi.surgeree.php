@@ -260,6 +260,7 @@ class Surgeree {
 		$j = $start;
 		for ($i = 1; $i <= $iters; $i += $increment) {
 			$variables[] = array(
+				'index'	=> $j-1,
 				'current' => $j,
 				'total' => $total
 			);
