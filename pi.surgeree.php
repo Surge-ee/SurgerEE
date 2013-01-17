@@ -253,7 +253,7 @@ class Surgeree {
 	 */
 	function years() {
 		// Prepare parameters
-		$exclude_current_year = ($this->EE->TMPL->fetch_param('exclude_current_year', '') == 'yes');
+		$exclude_current_year = $this->_processYesNo($this->EE->TMPL->fetch_param('exclude_current_year', ''));
 
 		$channels = explode('|', $this->EE->TMPL->fetch_param('channel', ''));
 		$num_channels = count($channels);
