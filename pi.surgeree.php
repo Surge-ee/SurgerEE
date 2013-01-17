@@ -234,37 +234,46 @@ class Surgeree {
 
 		$sort = (strtoupper($this->EE->TMPL->fetch_param('sort', 'desc')) === 'DESC') ? 'DESC' : 'ASC';
 
-		// Prepare query
-		$sql = "SELECT t.`year`
-				FROM `exp_channel_titles` AS t
-					JOIN `exp_channels` AS c
-						ON (c.`channel_id` = t.`channel_id`) WHERE ";
-		// If excluding year, do it now
+		$this->EE->db->select('channel_titles.year')
+			->from('channel_titles')
+			->join('channels', 'channels.channel_id = channel_titles.channel_id');
+
+		// Add in current year exclusion if applicable
 		if ($exclude_current_year) {
 			$current_year = date('Y');
-			$sql .= " t.`year` != '$current_year' AND ";
+			$this->EE->db->where('channel_titles.year !=', $current_year);
 		}
-		// Add which channel it should come from
+
+		// Add which channel(s) it should come from
 		if ($num_channels > 0) {
+			$channels_group = "(";
 			for ($i = 0; $i < $num_channels; $i++) {
-				$sql .= "c.`channel_name`='{$channels[$i]}' AND ";
+				$channel = $this->EE->db->escape($channels[$i]);
+				$channels_group .= "`exp_channels`.`channel_name` = $channel";
+				if ($i != ($num_channels - 1)) { $channels_group .= " OR ";}
 			}
+			$channels_group .= ")";
+
+			$this->EE->db->where($channels_group, null, false);
 		}
+
 		// Add which statuses it should pull.
-		$sql .= "(";
+		$status_group = "(";
 		for ($i = 0; $i < $num_statuses; $i++) {
-			$sql .= "t.`status`='{$statuses[$i]}'";
-			if ($i != ($num_statuses - 1)) {
-				$sql .= " OR ";
-			}
+			$status = $this->EE->db->escape($statuses[$i]);
+			$status_group .= "`exp_channel_titles`.`status` = $status";
+			if ($i != ($num_statuses - 1)) { $status_group .= " OR "; }
 		}
-		// Add what order to pull in.
-		$sql .= ") GROUP BY t.`year` ORDER BY t.`entry_date` $sort";
+		$status_group .= ")";
 
-		// Execute query, build results
+		$this->EE->db->where($status_group, null, false);
+
+		// Run the query, order it properly.
+		$query = $this->EE->db->group_by('channel_titles.year')
+			->order_by('channel_titles.entry_date', $sort)
+			->get();
+
 		$variables = array();
-		$query = $this->EE->db->query($sql);
-
 		foreach($query->result() as $row) {
 			$variables[] = array(
 				'surgeree:years:year' => $row->year
