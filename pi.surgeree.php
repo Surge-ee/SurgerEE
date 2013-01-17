@@ -639,6 +639,20 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	// -- Private Helpers -- //
+
+	/**
+	 * Abstracts out the process of determining Yes/No, Y/N, True/False string booleans.
+	 *
+	 * @param string $value String to be interpreted in boolean context.
+	 * @return bool Authentic boolean representation.
+	 */
+	private function _processYesNo($value) {
+		$lowered = strtolower($value);
+
+		return ($lowered === 'yes' || $lowered === 'y' || $lowered === 'true');
+	}
+
 	// -- Plugin Usage -- //
 	public static function usage() {
 		$buffer = 'See documentation on <a href="https://github.com/dsurgeons/SurgerEE/wiki">github</a>.';
