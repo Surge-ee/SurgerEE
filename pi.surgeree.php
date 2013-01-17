@@ -88,14 +88,11 @@ class Surgeree {
 
 		$params_id	= $sanitize.$check_XID.$glue.$split_by;
 
-		if ( !isset($this->EE->session->cache['surgeree']['post']['valid_XID']) )
-		{
+		if ( !isset($this->EE->session->cache['surgeree']['post']['valid_XID']) ) {
 			$valid_XID =
 			$this->EE->session->cache['surgeree']['post']['valid_XID'] =
 			$this->EE->security->secure_forms_check($this->EE->input->post('XID'));
-		}
-		else
-		{
+		} else {
 			$valid_XID = $this->EE->session->cache['surgeree']['post']['valid_XID'];
 		}
 
@@ -103,45 +100,33 @@ class Surgeree {
 			trim($var) === '' OR
 			($check_XID AND $valid_XID === FALSE) OR
 			$this->EE->input->post($var, TRUE) === FALSE
-			)
-		{
+		) {
 			return $this->return_data = $this->EE->TMPL->no_results();
 		}
 
 
-		if ($sanitize === 'filename')
-		{
+		if ($sanitize === 'filename') {
 			$varvalue = $this->EE->security->sanitize_filename( $this->EE->input->post($var) );
-		}
-		elseif ($sanitize === 'search')
-		{
+		} elseif ($sanitize === 'search') {
 			$this->EE->load->helper('search');
 			$varvalue = $this->EE->input->post($var);
-		}
-		else
-		{
+		} else {
 			$varvalue = $this->EE->input->post($var,TRUE);
 
-			if ($sanitize === 'html')
-			{
+			if ($sanitize === 'html') {
 				$varvalue = htmlspecialchars($varvalue, ENT_QUOTES);
-			}
-			elseif ($sanitize === 'sql')
-			{
+			} elseif ($sanitize === 'sql') {
 				$varvalue = $this->EE->db->escape_str($varvalue);
 			}
 		}
 
-		if ( empty($td) )
+		if ( empty($td) ) {
 		// if is a single tag, grab just the first var
-		{
-			if( is_array($varvalue) )
-			{
+			if ( is_array($varvalue) ) {
 				$varvalue = implode($glue, $varvalue);
 			}
 
-			if ($sanitize === 'search')
-			{
+			if ($sanitize === 'search') {
 				$this->EE->load->helper('search');
 				$varvalue = sanitize_search_terms( $this->EE->input->post($var) );
 			}
@@ -149,19 +134,13 @@ class Surgeree {
 			$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$varvalue);
 
 			return $this->return_data = $varvalue;
-		}
-		else
-		{
+		} else {
 			$vartags = array();
 
-			if( is_array($varvalue) )
-			{
-				foreach ($varvalue as $value)
-				{
-					if( !is_array( $value ) )
-					{
-						if ($sanitize === 'search')
-						{
+			if( is_array($varvalue) ) {
+				foreach ($varvalue as $value) {
+					if( !is_array( $value ) ) {
+						if ($sanitize === 'search') {
 							$value = sanitize_search_terms( $value );
 						}
 
@@ -169,35 +148,27 @@ class Surgeree {
 						$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$value);
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$varvalue = (string)$varvalue;
 
-				if ($sanitize === 'search')
-				{
+				if ($sanitize === 'search') {
 					$varvalue = sanitize_search_terms( $varvalue );
 				}
 
-				if ( $split_by !== '' )
-				{
+				if ( $split_by !== '' ) {
 					$varvalues = explode($split_by, $varvalue);
 
-					foreach ($varvalues as $value)
-					{
+					foreach ($varvalues as $value) {
 						$vartags[] =  array('surg:post:value' => $value);
 						$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$value);
 					}
-				}
-				else
-				{
+				} else {
 					$vartags[] =  array('surg:post:value' => $varvalue);
 					$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$varvalue);
 				}
 			}
 
-			if ( empty($vartags) )
-			{
+			if ( empty($vartags) ) {
 				return $this->return_data = $this->EE->TMPL->no_results();
 			}
 
@@ -325,16 +296,14 @@ class Surgeree {
 		$delimiter = $this->EE->TMPL->fetch_param('delimiter', '');
 		$string = $this->EE->TMPL->fetch_param('string', '');
 
-		if ( $delimiter == '' OR $string == '')
-		{
+		if ( $delimiter == '' OR $string == '') {
 			return $this->return_data = $this->EE->TMPL->no_results();
 		}
 
 		$vartags = array();
 		$a = explode($delimiter, $string);
 
-		foreach ($a as $v)
-		{
+		foreach ($a as $v) {
 			$vartags[] =  array('surg:split_string:item' => $v);
 			$this->EE->TMPL->log_item("surgeree:explode:".$string.":item: ".$v);
 		}
@@ -368,8 +337,7 @@ class Surgeree {
 		$regex_array = explode("|",$regex);
 		$replace_array = explode("|",$replace);
 
-		foreach($regex_array as $loop)
-		{
+		foreach($regex_array as $loop) {
 			$string = preg_replace("/$loop/",$replace_array[$i],$string);
 			$i++;
 		}
@@ -464,8 +432,7 @@ class Surgeree {
 
 		$this->return_data = '';
 
-		if ( intval($entry_id) !== 0 )
-		{
+		if ( intval($entry_id) !== 0 ) {
 			$sql = "SELECT `url_title` FROM `exp_channel_titles` WHERE `entry_id`=?;";
 			$q = $this->EE->db->query($sql, array($entry_id));
 
@@ -503,12 +470,9 @@ class Surgeree {
 		$words = $this->EE->TMPL->fetch_param('words');
 
 		$this->return_data = strip_tags($this->EE->TMPL->tagdata, $allowed_tags);
-		if ( !empty($chars) && is_numeric($chars) )
-		{
+		if ( !empty($chars) && is_numeric($chars) ) {
 			$this->return_data = $this->EE->functions->char_limiter($this->return_data, $chars);
-		}
-		elseif ( !empty($words) && is_numeric($words) )
-		{
+		} elseif ( !empty($words) && is_numeric($words) ) {
 			$this->return_data = $this->EE->functions->word_limiter($this->return_data, $chars);
 		}
 
@@ -548,16 +512,13 @@ class Surgeree {
 		$str = str_replace(SLASH, '/', trim(urldecode(str_replace('&amp;', '&', $this->EE->TMPL->tagdata))));
 
 		// really, really bad URL
-		if (($url = @parse_url($str)) === FALSE || (! isset($url['scheme']) && ($url = @parse_url("http://{$str}")) === FALSE) )
-		{
+		if (($url = @parse_url($str)) === FALSE || (! isset($url['scheme']) && ($url = @parse_url("http://{$str}")) === FALSE) ) {
 			$this->EE->TMPL->log_item('Surgeree:url_fix Plugin error: unable to parse URL '.htmlentities($str));
 			return;
 		}
 
-		foreach ($url as $k => $v)
-		{
-			switch($k)
-			{
+		foreach ($url as $k => $v) {
+			switch($k) {
 				case 'path':
 					$url[$k] = urlencode(str_replace(array_keys($protected), $protected, $v));
 				break;
@@ -581,7 +542,7 @@ class Surgeree {
 		$redirect_method 	= $this->EE->config->item('redirect_method') == 'refresh'
 							? 'refresh'
 							: 'location';
-		if ( !empty($location) ){
+		if ( !empty($location) ) {
 			$this->EE->load->helper('url');
 			return redirect($location,$redirect_method,$response_code);
 		}
@@ -618,9 +579,11 @@ class Surgeree {
 				? '/'. $uri
 				: $uri;
 	}
+
 	function referer() {
 		return $this->EE->input->server('HTTP_REFERER', TRUE);
 	}
+
 	function previous_url() {
 		$default = $this->EE->TMPL->fetch_param('default', '');
 
@@ -630,6 +593,7 @@ class Surgeree {
 
 		return $this->return_data;
 	}
+
 	/** Ensures presence of http in a url, to prevent urls from pointing to wrong domain. */
 	function ensure_http() {
 		$this->return_data = $this->EE->TMPL->tagdata;
