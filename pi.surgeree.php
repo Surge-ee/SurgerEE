@@ -82,7 +82,7 @@ class Surgeree {
 		$var		= $this->EE->TMPL->fetch_param('varname', '');
 		$td			= ltrim($this->EE->TMPL->tagdata);
 		$sanitize 	= $this->EE->TMPL->fetch_param('sanitize', '');
-		$check_XID	= $this->EE->TMPL->fetch_param('check_xid', 'no');
+		$check_XID	= $this->_processYesNo($this->EE->TMPL->fetch_param('check_xid', 'no'));
 		$glue		= $this->EE->TMPL->fetch_param('glue', '');
 		$split_by 	= $this->EE->TMPL->fetch_param('split', '');
 
@@ -101,7 +101,7 @@ class Surgeree {
 
 		if (
 			trim($var) === '' OR
-			($check_XID === 'yes' AND $valid_XID === FALSE) OR
+			($check_XID AND $valid_XID === FALSE) OR
 			$this->EE->input->post($var, TRUE) === FALSE
 			)
 		{
