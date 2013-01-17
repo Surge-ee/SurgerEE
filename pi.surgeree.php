@@ -555,11 +555,6 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** Returns entire uri string (instead of having to check for each segment). */
-	function all_segments() {
-		return $this->EE->uri->uri_string();
-	}
-
 	/** Returns the number of segments in the current page's url. */
 	function total_segments() {
 		return $this->EE->uri->total_segments();
@@ -573,11 +568,8 @@ class Surgeree {
 
 	/** Returns the entire uri for the current page, including the first /, to match the behavior of the page_uri of exp:channel:entries. */
 	function current_uri() {
-		$this->EE->load->helper('url');
-		$uri = uri_string();
-		return substr($uri, 0) !== '/'
-				? '/'. $uri
-				: $uri;
+		$uri = $this->EE->uri->uri_string();
+		return (substr($uri, 0) !== '/') ? '/'.$uri : $uri;
 	}
 
 	function referer() {
