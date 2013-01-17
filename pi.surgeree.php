@@ -480,7 +480,7 @@ class Surgeree {
 	}
 
 	function url_encode() {
-		$use_nonstandard_method = $this->_processYesNo($this->EE->TMPL->fetch_param(''));
+		$use_nonstandard_method = $this->_processYesNo($this->EE->TMPL->fetch_param('use_old_method'));
 
 		if ($use_nonstandard_method) {
 			$this->return_data = urlencode($this->EE->TMPL->tagdata);
@@ -492,7 +492,7 @@ class Surgeree {
 	}
 
 	function url_decode() {
-		$use_nonstandard_method = $this->_processYesNo($this->EE->TMPL->fetch_param(''));
+		$use_nonstandard_method = $this->_processYesNo($this->EE->TMPL->fetch_param('use_old_method'));
 
 		if ($use_nonstandard_method) {
 			$this->return_data = urldecode($this->EE->TMPL->tagdata);
