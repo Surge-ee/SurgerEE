@@ -144,7 +144,7 @@ class Surgeree {
 							$value = sanitize_search_terms( $value );
 						}
 
-						$vartags[] =  array('surg:post:value' => $value);
+						$vartags[] =  array('surgeree:post:value' => $value);
 						$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$value);
 					}
 				}
@@ -159,11 +159,11 @@ class Surgeree {
 					$varvalues = explode($split_by, $varvalue);
 
 					foreach ($varvalues as $value) {
-						$vartags[] =  array('surg:post:value' => $value);
+						$vartags[] =  array('surgeree:post:value' => $value);
 						$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$value);
 					}
 				} else {
-					$vartags[] =  array('surg:post:value' => $varvalue);
+					$vartags[] =  array('surgeree:post:value' => $varvalue);
 					$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$varvalue);
 				}
 			}
@@ -267,7 +267,7 @@ class Surgeree {
 
 		foreach($query->result() as $row) {
 			$variables[] = array(
-				'year' => $row->year
+				'surgeree:years:year' => $row->year
 			);
 		}
 
@@ -304,8 +304,8 @@ class Surgeree {
 		$a = explode($delimiter, $string);
 
 		foreach ($a as $v) {
-			$vartags[] =  array('surg:split_string:item' => $v);
-			$this->EE->TMPL->log_item("surgeree:explode:".$string.":item: ".$v);
+			$vartags[] =  array('surgeree:split_string:item' => $v);
+			$this->EE->TMPL->log_item("surgeree:split_string:".$string.":item: ".$v);
 		}
 
 		return $this->return_data = $this->EE->TMPL->parse_variables( ltrim($this->EE->TMPL->tagdata), $vartags );
@@ -370,9 +370,9 @@ class Surgeree {
 		$j = $start;
 		for ($i = 1; $i <= $iters; $i += $increment) {
 			$variables[] = array(
-				'index'	=> $j-1,
-				'current' => $j,
-				'total' => $total
+				'surgeree:loop:index'	=> $j-1,
+				'surgeree:loop:current' => $j,
+				'surgeree:loop:total' => $total
 			);
 			$j++;
 		}
@@ -401,8 +401,8 @@ class Surgeree {
 		$j = 1;
 		for ($i = 1; $i <= $needed_iterations; $i += 1) {
 			$variables[] = array(
-				'current' => $j,
-				'total' => $needed_iterations
+				'surgeree:loop_fill:current' => $j,
+				'surgeree:loop_fill:total' => $needed_iterations
 			);
 			$j++;
 		}
