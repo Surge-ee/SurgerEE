@@ -415,11 +415,13 @@ class Surgeree {
 	function url_title_2_entry_id() {
 		$url_title = $this->EE->TMPL->fetch_param('url_title', '');
 
-		$sql = "SELECT `entry_id` FROM `exp_channel_titles` WHERE `url_title`=?;";
-		$q = $this->EE->db->query($sql, array($url_title));
+		$q = $this->EE->db->select('entry_id')
+			->from('channel_titles')
+			->where('url_title', $url_title)
+			->get();
 
 		if ($q->num_rows() > 0) {
-			$this->return_data = $q->row()->entry_id;
+			$this->return_data = $q->row('entry_id');
 		} else {
 			$this->return_data = '';
 		}
@@ -433,11 +435,13 @@ class Surgeree {
 		$this->return_data = '';
 
 		if ( intval($entry_id) !== 0 ) {
-			$sql = "SELECT `url_title` FROM `exp_channel_titles` WHERE `entry_id`=?;";
-			$q = $this->EE->db->query($sql, array($entry_id));
+			$q = $this->EE->db->select('url_title')
+				->from('channel_titles')
+				->where('entry_id', $entry_id)
+				->get();
 
 			if ($q->num_rows() > 0) {
-				$this->return_data = $q->row()->url_title;
+				$this->return_data = $q->row('url_title');
 			}
 		}
 
@@ -447,11 +451,13 @@ class Surgeree {
 	function entry_id_2_title() {
 		$entry_id = $this->EE->TMPL->fetch_param('entry_id', '');
 
-		$sql = "SELECT `title` FROM `exp_channel_titles` WHERE `entry_id`=?;";
-		$q = $this->EE->db->query($sql, array($entry_id));
+		$q = $this->EE->db->select('title')
+			->from('channel_titles')
+			->where('entry_id', $entry_id)
+			->get();
 
 		if ($q->num_rows() > 0) {
-			$this->return_data = $q->row()->title;
+			$this->return_data = $q->row('title');
 		} else {
 			$this->return_data = '';
 		}
