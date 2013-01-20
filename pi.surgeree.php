@@ -82,66 +82,51 @@ class Surgeree {
 		$var		= $this->EE->TMPL->fetch_param('varname', '');
 		$td			= ltrim($this->EE->TMPL->tagdata);
 		$sanitize 	= $this->EE->TMPL->fetch_param('sanitize', '');
-		$check_XID	= $this->EE->TMPL->fetch_param('check_xid', 'no');
+		$check_XID	= $this->_processYesNo($this->EE->TMPL->fetch_param('check_xid', 'no'));
 		$glue		= $this->EE->TMPL->fetch_param('glue', '');
 		$split_by 	= $this->EE->TMPL->fetch_param('split', '');
 
 		$params_id	= $sanitize.$check_XID.$glue.$split_by;
 
-		if ( !isset($this->EE->session->cache['surgeree']['post']['valid_XID']) )
-		{
+		if ( !isset($this->EE->session->cache['surgeree']['post']['valid_XID']) ) {
 			$valid_XID =
 			$this->EE->session->cache['surgeree']['post']['valid_XID'] =
 			$this->EE->security->secure_forms_check($this->EE->input->post('XID'));
-		}
-		else
-		{
+		} else {
 			$valid_XID = $this->EE->session->cache['surgeree']['post']['valid_XID'];
 		}
 
 		if (
 			trim($var) === '' OR
-			($check_XID === 'yes' AND $valid_XID === FALSE) OR
+			($check_XID AND $valid_XID === FALSE) OR
 			$this->EE->input->post($var, TRUE) === FALSE
-			)
-		{
+		) {
 			return $this->return_data = $this->EE->TMPL->no_results();
 		}
 
 
-		if ($sanitize === 'filename')
-		{
+		if ($sanitize === 'filename') {
 			$varvalue = $this->EE->security->sanitize_filename( $this->EE->input->post($var) );
-		}
-		elseif ($sanitize === 'search')
-		{
+		} elseif ($sanitize === 'search') {
 			$this->EE->load->helper('search');
 			$varvalue = $this->EE->input->post($var);
-		}
-		else
-		{
+		} else {
 			$varvalue = $this->EE->input->post($var,TRUE);
 
-			if ($sanitize === 'html')
-			{
+			if ($sanitize === 'html') {
 				$varvalue = htmlspecialchars($varvalue, ENT_QUOTES);
-			}
-			elseif ($sanitize === 'sql')
-			{
+			} elseif ($sanitize === 'sql') {
 				$varvalue = $this->EE->db->escape_str($varvalue);
 			}
 		}
 
-		if ( empty($td) )
+		if ( empty($td) ) {
 		// if is a single tag, grab just the first var
-		{
-			if( is_array($varvalue) )
-			{
+			if ( is_array($varvalue) ) {
 				$varvalue = implode($glue, $varvalue);
 			}
 
-			if ($sanitize === 'search')
-			{
+			if ($sanitize === 'search') {
 				$this->EE->load->helper('search');
 				$varvalue = sanitize_search_terms( $this->EE->input->post($var) );
 			}
@@ -149,55 +134,41 @@ class Surgeree {
 			$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$varvalue);
 
 			return $this->return_data = $varvalue;
-		}
-		else
-		{
+		} else {
 			$vartags = array();
 
-			if( is_array($varvalue) )
-			{
-				foreach ($varvalue as $value)
-				{
-					if( !is_array( $value ) )
-					{
-						if ($sanitize === 'search')
-						{
+			if( is_array($varvalue) ) {
+				foreach ($varvalue as $value) {
+					if( !is_array( $value ) ) {
+						if ($sanitize === 'search') {
 							$value = sanitize_search_terms( $value );
 						}
 
-						$vartags[] =  array('surg:post:value' => $value);
+						$vartags[] =  array('surgeree:post:value' => $value);
 						$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$value);
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$varvalue = (string)$varvalue;
 
-				if ($sanitize === 'search')
-				{
+				if ($sanitize === 'search') {
 					$varvalue = sanitize_search_terms( $varvalue );
 				}
 
-				if ( $split_by !== '' )
-				{
+				if ( $split_by !== '' ) {
 					$varvalues = explode($split_by, $varvalue);
 
-					foreach ($varvalues as $value)
-					{
-						$vartags[] =  array('surg:post:value' => $value);
+					foreach ($varvalues as $value) {
+						$vartags[] =  array('surgeree:post:value' => $value);
 						$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$value);
 					}
-				}
-				else
-				{
-					$vartags[] =  array('surg:post:value' => $varvalue);
+				} else {
+					$vartags[] =  array('surgeree:post:value' => $varvalue);
 					$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$varvalue);
 				}
 			}
 
-			if ( empty($vartags) )
-			{
+			if ( empty($vartags) ) {
 				return $this->return_data = $this->EE->TMPL->no_results();
 			}
 
@@ -253,7 +224,7 @@ class Surgeree {
 	 */
 	function years() {
 		// Prepare parameters
-		$exclude_current_year = ($this->EE->TMPL->fetch_param('exclude_current_year', '') == 'yes');
+		$exclude_current_year = $this->_processYesNo($this->EE->TMPL->fetch_param('exclude_current_year', ''));
 
 		$channels = explode('|', $this->EE->TMPL->fetch_param('channel', ''));
 		$num_channels = count($channels);
@@ -263,40 +234,49 @@ class Surgeree {
 
 		$sort = (strtoupper($this->EE->TMPL->fetch_param('sort', 'desc')) === 'DESC') ? 'DESC' : 'ASC';
 
-		// Prepare query
-		$sql = "SELECT t.`year`
-				FROM `exp_channel_titles` AS t
-					JOIN `exp_channels` AS c
-						ON (c.`channel_id` = t.`channel_id`) WHERE ";
-		// If excluding year, do it now
+		$this->EE->db->select('channel_titles.year')
+			->from('channel_titles')
+			->join('channels', 'channels.channel_id = channel_titles.channel_id');
+
+		// Add in current year exclusion if applicable
 		if ($exclude_current_year) {
 			$current_year = date('Y');
-			$sql .= " t.`year` != '$current_year' AND ";
+			$this->EE->db->where('channel_titles.year !=', $current_year);
 		}
-		// Add which channel it should come from
+
+		// Add which channel(s) it should come from
 		if ($num_channels > 0) {
+			$channels_group = "(";
 			for ($i = 0; $i < $num_channels; $i++) {
-				$sql .= "c.`channel_name`='{$channels[$i]}' AND ";
+				$channel = $this->EE->db->escape($channels[$i]);
+				$channels_group .= "`exp_channels`.`channel_name` = $channel";
+				if ($i != ($num_channels - 1)) { $channels_group .= " OR ";}
 			}
+			$channels_group .= ")";
+
+			$this->EE->db->where($channels_group, null, false);
 		}
+
 		// Add which statuses it should pull.
-		$sql .= "(";
+		$status_group = "(";
 		for ($i = 0; $i < $num_statuses; $i++) {
-			$sql .= "t.`status`='{$statuses[$i]}'";
-			if ($i != ($num_statuses - 1)) {
-				$sql .= " OR ";
-			}
+			$status = $this->EE->db->escape($statuses[$i]);
+			$status_group .= "`exp_channel_titles`.`status` = $status";
+			if ($i != ($num_statuses - 1)) { $status_group .= " OR "; }
 		}
-		// Add what order to pull in.
-		$sql .= ") GROUP BY t.`year` ORDER BY t.`entry_date` $sort";
+		$status_group .= ")";
 
-		// Execute query, build results
+		$this->EE->db->where($status_group, null, false);
+
+		// Run the query, order it properly.
+		$query = $this->EE->db->group_by('channel_titles.year')
+			->order_by('channel_titles.entry_date', $sort)
+			->get();
+
 		$variables = array();
-		$query = $this->EE->db->query($sql);
-
 		foreach($query->result() as $row) {
 			$variables[] = array(
-				'year' => $row->year
+				'surgeree:years:year' => $row->year
 			);
 		}
 
@@ -325,18 +305,16 @@ class Surgeree {
 		$delimiter = $this->EE->TMPL->fetch_param('delimiter', '');
 		$string = $this->EE->TMPL->fetch_param('string', '');
 
-		if ( $delimiter == '' OR $string == '')
-		{
+		if ( $delimiter == '' OR $string == '') {
 			return $this->return_data = $this->EE->TMPL->no_results();
 		}
 
 		$vartags = array();
 		$a = explode($delimiter, $string);
 
-		foreach ($a as $v)
-		{
-			$vartags[] =  array('surg:split_string:item' => $v);
-			$this->EE->TMPL->log_item("surgeree:explode:".$string.":item: ".$v);
+		foreach ($a as $v) {
+			$vartags[] =  array('surgeree:split_string:item' => $v);
+			$this->EE->TMPL->log_item("surgeree:split_string:".$string.":item: ".$v);
 		}
 
 		return $this->return_data = $this->EE->TMPL->parse_variables( ltrim($this->EE->TMPL->tagdata), $vartags );
@@ -368,8 +346,7 @@ class Surgeree {
 		$regex_array = explode("|",$regex);
 		$replace_array = explode("|",$replace);
 
-		foreach($regex_array as $loop)
-		{
+		foreach($regex_array as $loop) {
 			$string = preg_replace("/$loop/",$replace_array[$i],$string);
 			$i++;
 		}
@@ -402,8 +379,9 @@ class Surgeree {
 		$j = $start;
 		for ($i = 1; $i <= $iters; $i += $increment) {
 			$variables[] = array(
-				'current' => $j,
-				'total' => $total
+				'surgeree:loop:index'	=> $j-1,
+				'surgeree:loop:current' => $j,
+				'surgeree:loop:total' => $total
 			);
 			$j++;
 		}
@@ -432,8 +410,8 @@ class Surgeree {
 		$j = 1;
 		for ($i = 1; $i <= $needed_iterations; $i += 1) {
 			$variables[] = array(
-				'current' => $j,
-				'total' => $needed_iterations
+				'surgeree:loop_fill:current' => $j,
+				'surgeree:loop_fill:total' => $needed_iterations
 			);
 			$j++;
 		}
@@ -446,11 +424,13 @@ class Surgeree {
 	function url_title_2_entry_id() {
 		$url_title = $this->EE->TMPL->fetch_param('url_title', '');
 
-		$sql = "SELECT `entry_id` FROM `exp_channel_titles` WHERE `url_title`=?;";
-		$q = $this->EE->db->query($sql, array($url_title));
+		$q = $this->EE->db->select('entry_id')
+			->from('channel_titles')
+			->where('url_title', $url_title)
+			->get();
 
 		if ($q->num_rows() > 0) {
-			$this->return_data = $q->row()->entry_id;
+			$this->return_data = $q->row('entry_id');
 		} else {
 			$this->return_data = '';
 		}
@@ -463,13 +443,14 @@ class Surgeree {
 
 		$this->return_data = '';
 
-		if ( intval($entry_id) !== 0 )
-		{
-			$sql = "SELECT `url_title` FROM `exp_channel_titles` WHERE `entry_id`=?;";
-			$q = $this->EE->db->query($sql, array($entry_id));
+		if ( intval($entry_id) !== 0 ) {
+			$q = $this->EE->db->select('url_title')
+				->from('channel_titles')
+				->where('entry_id', $entry_id)
+				->get();
 
 			if ($q->num_rows() > 0) {
-				$this->return_data = $q->row()->url_title;
+				$this->return_data = $q->row('url_title');
 			}
 		}
 
@@ -479,11 +460,13 @@ class Surgeree {
 	function entry_id_2_title() {
 		$entry_id = $this->EE->TMPL->fetch_param('entry_id', '');
 
-		$sql = "SELECT `title` FROM `exp_channel_titles` WHERE `entry_id`=?;";
-		$q = $this->EE->db->query($sql, array($entry_id));
+		$q = $this->EE->db->select('title')
+			->from('channel_titles')
+			->where('entry_id', $entry_id)
+			->get();
 
 		if ($q->num_rows() > 0) {
-			$this->return_data = $q->row()->title;
+			$this->return_data = $q->row('title');
 		} else {
 			$this->return_data = '';
 		}
@@ -491,50 +474,6 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	function string_to_date()
-	{
-		$date_string	= $this->EE->TMPL->fetch_param('string', '');
-		$format 		= $this->EE->TMPL->fetch_param('format', '');
-		$tagdata		= $this->EE->TMPL->tagdata;
-		$localize		= $this->EE->TMPL->fetch_param('localize') == 'yes'
-						? TRUE
-						: FALSE;
-
-		$date_string = ($tagdata != '' && $date_string == '') ? $tagdata : $date_string ;
-
-		$date_constants	= array(
-			'DATE_ATOM'		=>	'%Y-%m-%dT%H:%i:%s%Q',
-			'DATE_COOKIE'	=>	'%l, %d-%M-%y %H:%i:%s UTC',
-			'DATE_ISO8601'	=>	'%Y-%m-%dT%H:%i:%s%Q',
-			'DATE_RFC822'	=>	'%D, %d %M %y %H:%i:%s %O',
-			'DATE_RFC850'	=>	'%l, %d-%M-%y %H:%m:%i UTC',
-			'DATE_RFC1036'	=>	'%D, %d %M %y %H:%i:%s %O',
-			'DATE_RFC1123'	=>	'%D, %d %M %Y %H:%i:%s %O',
-			'DATE_RFC2822'	=>	'%D, %d %M %Y %H:%i:%s %O',
-			'DATE_RSS'		=>	'%D, %d %M %Y %H:%i:%s %O',
-			'DATE_W3C'		=>	'%Y-%m-%dT%H:%i:%s%Q'
-		);
-
-		foreach ($date_constants as $key => $val)
-		{
-			if ( $format === $key)
-			{
-				$format = $val;
-				break;
-			}
-		}
-
-		if ( $unixtime = strtotime($date_string) )
-		{
-			$this->return_data = $this->EE->localize->decode_date($format , $unixtime , $localize );
-		}
-		else
-		{
-			$this->return_data = '';
-		}
-
-		return $this->return_data;
-	}
 	/*
 		Strip HTML out of content. Can optionally allow html tags
 		Wrapper for @Link: http://us.php.net/strip_tags
@@ -546,12 +485,9 @@ class Surgeree {
 		$words = $this->EE->TMPL->fetch_param('words');
 
 		$this->return_data = strip_tags($this->EE->TMPL->tagdata, $allowed_tags);
-		if ( !empty($chars) && is_numeric($chars) )
-		{
+		if ( !empty($chars) && is_numeric($chars) ) {
 			$this->return_data = $this->EE->functions->char_limiter($this->return_data, $chars);
-		}
-		elseif ( !empty($words) && is_numeric($words) )
-		{
+		} elseif ( !empty($words) && is_numeric($words) ) {
 			$this->return_data = $this->EE->functions->word_limiter($this->return_data, $chars);
 		}
 
@@ -559,20 +495,29 @@ class Surgeree {
 	}
 
 	function url_encode() {
-		return $this->return_data = urlencode($this->EE->TMPL->tagdata);
+		$use_nonstandard_method = $this->_processYesNo($this->EE->TMPL->fetch_param('use_old_method'));
+
+		if ($use_nonstandard_method) {
+			$this->return_data = urlencode($this->EE->TMPL->tagdata);
+		} else {
+			$this->return_data = rawurlencode($this->EE->TMPL->tagdata);
+		}
+
+		return $this->return_data;
 	}
 
 	function url_decode() {
-		return $this->return_data = urldecode($this->EE->TMPL->tagdata);
+		$use_nonstandard_method = $this->_processYesNo($this->EE->TMPL->fetch_param('use_old_method'));
+
+		if ($use_nonstandard_method) {
+			$this->return_data = urldecode($this->EE->TMPL->tagdata);
+		} else {
+			$this->return_data = rawurldecode($this->EE->TMPL->tagdata);
+		}
+
+		return $this->return_data;
 	}
 
-	function raw_url_encode() {
-		return $this->return_data = rawurlencode($this->EE->TMPL->tagdata);
-	}
-
-	function raw_url_decode() {
-		return $this->return_data = rawurldecode($this->EE->TMPL->tagdata);
-	}
 	function url_fix() {
 /**
  * @see  https://github.com/EllisLab/Valid-Url/blob/master/valid_url/pi.valid_url.php
@@ -582,16 +527,13 @@ class Surgeree {
 		$str = str_replace(SLASH, '/', trim(urldecode(str_replace('&amp;', '&', $this->EE->TMPL->tagdata))));
 
 		// really, really bad URL
-		if (($url = @parse_url($str)) === FALSE || (! isset($url['scheme']) && ($url = @parse_url("http://{$str}")) === FALSE) )
-		{
+		if (($url = @parse_url($str)) === FALSE || (! isset($url['scheme']) && ($url = @parse_url("http://{$str}")) === FALSE) ) {
 			$this->EE->TMPL->log_item('Surgeree:url_fix Plugin error: unable to parse URL '.htmlentities($str));
 			return;
 		}
 
-		foreach ($url as $k => $v)
-		{
-			switch($k)
-			{
+		foreach ($url as $k => $v) {
+			switch($k) {
 				case 'path':
 					$url[$k] = urlencode(str_replace(array_keys($protected), $protected, $v));
 				break;
@@ -615,7 +557,7 @@ class Surgeree {
 		$redirect_method 	= $this->EE->config->item('redirect_method') == 'refresh'
 							? 'refresh'
 							: 'location';
-		if ( !empty($location) ){
+		if ( !empty($location) ) {
 			$this->EE->load->helper('url');
 			return redirect($location,$redirect_method,$response_code);
 		}
@@ -626,11 +568,6 @@ class Surgeree {
 
 		$this->return_data = ucwords(preg_replace('/[_-]/', ' ', $url_title));
 		return $this->return_data;
-	}
-
-	/** Returns entire uri string (instead of having to check for each segment). */
-	function all_segments() {
-		return $this->EE->uri->uri_string();
 	}
 
 	/** Returns the number of segments in the current page's url. */
@@ -646,15 +583,14 @@ class Surgeree {
 
 	/** Returns the entire uri for the current page, including the first /, to match the behavior of the page_uri of exp:channel:entries. */
 	function current_uri() {
-		$this->EE->load->helper('url');
-		$uri = uri_string();
-		return substr($uri, 0) !== '/'
-				? '/'. $uri
-				: $uri;
+		$uri = $this->EE->uri->uri_string();
+		return (substr($uri, 0) !== '/') ? '/'.$uri : $uri;
 	}
+
 	function referer() {
 		return $this->EE->input->server('HTTP_REFERER', TRUE);
 	}
+
 	function previous_url() {
 		$default = $this->EE->TMPL->fetch_param('default', '');
 
@@ -664,6 +600,7 @@ class Surgeree {
 
 		return $this->return_data;
 	}
+
 	/** Ensures presence of http in a url, to prevent urls from pointing to wrong domain. */
 	function ensure_http() {
 		$this->return_data = $this->EE->TMPL->tagdata;
@@ -687,6 +624,20 @@ class Surgeree {
 		}
 
 		return $this->return_data;
+	}
+
+	// -- Private Helpers -- //
+
+	/**
+	 * Abstracts out the process of determining Yes/No, Y/N, True/False string booleans.
+	 *
+	 * @param string $value String to be interpreted in boolean context.
+	 * @return bool Authentic boolean representation.
+	 */
+	private function _processYesNo($value) {
+		$lowered = strtolower($value);
+
+		return ($lowered === 'yes' || $lowered === 'y' || $lowered === 'true');
 	}
 
 	// -- Plugin Usage -- //
