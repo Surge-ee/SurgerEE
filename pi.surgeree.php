@@ -581,26 +581,25 @@ class Surgeree {
 	}
 
 	function url_encode() {
-		$use_nonstandard_method = $this->_processYesNo($this->EE->TMPL->fetch_param('use_old_method'));
-
-		if ($use_nonstandard_method) {
-			$this->return_data = urlencode($this->EE->TMPL->tagdata);
-		} else {
+		$use_raw_method = $this->_processYesNo($this->EE->TMPL->fetch_param('raw','yes'));
+		
+		if ($use_raw_method) {
 			$this->return_data = rawurlencode($this->EE->TMPL->tagdata);
+		} else {
+			$this->return_data = urlencode($this->EE->TMPL->tagdata);
 		}
-
+		
 		return $this->return_data;
 	}
-
+	
 	function url_decode() {
-		$use_nonstandard_method = $this->_processYesNo($this->EE->TMPL->fetch_param('use_old_method'));
-
-		if ($use_nonstandard_method) {
-			$this->return_data = urldecode($this->EE->TMPL->tagdata);
-		} else {
+		$use_raw_method = $this->_processYesNo($this->EE->TMPL->fetch_param('raw','yes'));
+		
+		if ($use_raw_method) {
 			$this->return_data = rawurldecode($this->EE->TMPL->tagdata);
+		} else {
+			$this->return_data = urldecode($this->EE->TMPL->tagdata);
 		}
-
 		return $this->return_data;
 	}
 
