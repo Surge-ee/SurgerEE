@@ -72,108 +72,11 @@ class Surgeree {
 
 	/** Grab value of a get variable */
 	function get() {
-		$key = $this->EE->TMPL->fetch_param('varname');
-		$this->return_data = $this->EE->input->get($key, TRUE);
-		return $this->return_data;
+		return $this->return_data = $this->_get_post('get');
 	}
-
 	/** Grab value of a post variable */
 	function post() {
-		$var		= $this->EE->TMPL->fetch_param('varname', '');
-		$td			= ltrim($this->EE->TMPL->tagdata);
-		$sanitize 	= $this->EE->TMPL->fetch_param('sanitize', '');
-		$check_XID	= $this->_processYesNo($this->EE->TMPL->fetch_param('check_xid', 'no'));
-		$glue		= $this->EE->TMPL->fetch_param('glue', '');
-		$split_by 	= $this->EE->TMPL->fetch_param('split', '');
-
-		$params_id	= $sanitize.$check_XID.$glue.$split_by;
-
-		if ( !isset($this->EE->session->cache['surgeree']['post']['valid_XID']) ) {
-			$valid_XID =
-			$this->EE->session->cache['surgeree']['post']['valid_XID'] =
-			$this->EE->security->secure_forms_check($this->EE->input->post('XID'));
-		} else {
-			$valid_XID = $this->EE->session->cache['surgeree']['post']['valid_XID'];
-		}
-
-		if (
-			trim($var) === '' OR
-			($check_XID AND $valid_XID === FALSE) OR
-			$this->EE->input->post($var, TRUE) === FALSE
-		) {
-			return $this->return_data = $this->EE->TMPL->no_results();
-		}
-
-
-		if ($sanitize === 'filename') {
-			$varvalue = $this->EE->security->sanitize_filename( $this->EE->input->post($var) );
-		} elseif ($sanitize === 'search') {
-			$this->EE->load->helper('search');
-			$varvalue = $this->EE->input->post($var);
-		} else {
-			$varvalue = $this->EE->input->post($var,TRUE);
-
-			if ($sanitize === 'html') {
-				$varvalue = htmlspecialchars($varvalue, ENT_QUOTES);
-			} elseif ($sanitize === 'sql') {
-				$varvalue = $this->EE->db->escape_str($varvalue);
-			}
-		}
-
-		if ( empty($td) ) {
-		// if is a single tag, grab just the first var
-			if ( is_array($varvalue) ) {
-				$varvalue = implode($glue, $varvalue);
-			}
-
-			if ($sanitize === 'search') {
-				$this->EE->load->helper('search');
-				$varvalue = sanitize_search_terms( $this->EE->input->post($var) );
-			}
-
-			$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$varvalue);
-
-			return $this->return_data = $varvalue;
-		} else {
-			$vartags = array();
-
-			if( is_array($varvalue) ) {
-				foreach ($varvalue as $value) {
-					if( !is_array( $value ) ) {
-						if ($sanitize === 'search') {
-							$value = sanitize_search_terms( $value );
-						}
-
-						$vartags[] =  array('surgeree:post:value' => $value);
-						$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$value);
-					}
-				}
-			} else {
-				$varvalue = (string)$varvalue;
-
-				if ($sanitize === 'search') {
-					$varvalue = sanitize_search_terms( $varvalue );
-				}
-
-				if ( $split_by !== '' ) {
-					$varvalues = explode($split_by, $varvalue);
-
-					foreach ($varvalues as $value) {
-						$vartags[] =  array('surgeree:post:value' => $value);
-						$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$value);
-					}
-				} else {
-					$vartags[] =  array('surgeree:post:value' => $varvalue);
-					$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$varvalue);
-				}
-			}
-
-			if ( empty($vartags) ) {
-				return $this->return_data = $this->EE->TMPL->no_results();
-			}
-
-			return $this->return_data = $this->EE->TMPL->parse_variables( $td, $vartags );
-		}
+		return $this->return_data = $this->_get_post('post');
 	}
 
 	/** Helper function replacing number_format accounting for groupings other than thousands.
