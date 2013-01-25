@@ -749,6 +749,34 @@ class Surgeree {
 	//  Usage
 	// ------------------------------------------------------------------------
 
+	private function _sanitize($value, $type = 'xss')
+	{
+		switch($type) {
+			case 'filename':
+				$value = $this->EE->security->sanitize_filename( $value );
+				break;
+
+			case  'search':
+				$this->EE->load->helper('search');
+				$value = sanitize_search_terms( $value );
+				break;
+
+			default:
+				$value = $this->EE->security->xss_clean( $value );
+				switch($type) {
+					case  'sql':
+						$value = $this->EE->db->escape_str($value);
+						break;
+
+					case  'html':
+						$value = htmlspecialchars($value, ENT_QUOTES);
+						break;
+
+				}
+		}
+
+		return $value;
+	}
 	/**
 	 * Usage to be displayed on the control panel documentation page.
 	 */
