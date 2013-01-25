@@ -528,19 +528,19 @@ class Surgeree {
 
 	function url_encode() {
 		$use_raw_method = $this->_processYesNo($this->EE->TMPL->fetch_param('raw','yes'));
-		
+
 		if ($use_raw_method) {
 			$this->return_data = rawurlencode($this->EE->TMPL->tagdata);
 		} else {
 			$this->return_data = urlencode($this->EE->TMPL->tagdata);
 		}
-		
+
 		return $this->return_data;
 	}
-	
+
 	function url_decode() {
 		$use_raw_method = $this->_processYesNo($this->EE->TMPL->fetch_param('raw','yes'));
-		
+
 		if ($use_raw_method) {
 			$this->return_data = rawurldecode($this->EE->TMPL->tagdata);
 		} else {
@@ -658,6 +658,85 @@ class Surgeree {
 	}
 
 	// -- Private Helpers -- //
+	private function _get_post($type = 'get_post') {
+		$var		= $this->EE->TMPL->fetch_param('varname', '');
+		$td			= ltrim($this->EE->TMPL->tagdata);
+		$sanitize 	= $this->EE->TMPL->fetch_param('sanitize', 'xss');
+		$check_XID	= $this->_processYesNo($this->EE->TMPL->fetch_param('check_xid', 'yes'))
+					? $this->_processYesNo($this->EE->config->item('secure_forms')) // CP -> Admin -> Security and Privacy -> Security and Sessions
+					: FALSE	;
+		$glue		= $this->EE->TMPL->fetch_param('glue', '');
+		$delimiter 	= $this->EE->TMPL->fetch_param('delimiter', '');
+
+		if (trim($var) === '')
+		{
+			$this->EE->TMPL->log_item("surgeree:".$type.":parameter varname empty");
+			return $this->EE->TMPL->no_results();
+		}
+
+		if ( $this->EE->input->$type($var, TRUE) === FALSE )
+		{
+			$this->EE->TMPL->log_item("surgeree:".$type.":".$var.":empty");
+			return $this->EE->TMPL->no_results();
+		}
+
+		if ($check_XID === TRUE )
+		{
+			/* to save on session cache because XID just can be checked once and the user can be grabing more than one var */
+			if ( !isset($this->EE->session->cache['surgeree'][$type]['valid_XID']) ) {
+				$valid_XID =
+				$this->EE->session->cache['surgeree'][$type]['valid_XID'] =
+				$this->EE->security->secure_forms_check($this->EE->input->$type('XID'));
+			} else {
+				$valid_XID = $this->EE->session->cache['surgeree'][$type]['valid_XID'];
+			}
+
+			if ($valid_XID === FALSE) {
+				$this->EE->TMPL->log_item("surgeree:".$type.":invalid or old XID");
+				return $this->EE->TMPL->no_results();
+			}
+		}
+
+		$varvalue	= ( $sanitize !== 'filename' AND $sanitize !== 'search')
+					? $this->EE->input->$type($var, TRUE)
+					: $this->EE->input->$type($var);
+
+		$varvalues =
+		$vartags = array();
+
+		$varvalues	= is_array($varvalue)
+					? $varvalue
+					: $delimiter !== ''
+					? explode($delimiter, $varvalue)
+					: array($varvalue);
+
+		foreach ($varvalues as $value)
+		{
+			if( !is_array( $value ) )// prevent multidimensional arrays, at least at the first level
+			{
+				$value = (string)$value;
+
+				$value = $this->_sanitize($value, $sanitize);
+
+				$vartags[] =  array('surgeree:'.$type.':value' => $value);
+				$this->EE->TMPL->log_item("surgeree:".$type.":".$var.":value: ".$value);
+			}
+		}
+
+		if ( empty($td) ) {
+			$varvalue = implode($glue, $varvalues);
+
+			$this->EE->TMPL->log_item("surgeree:".$type.":".$var.":value: ".$varvalue);
+
+			return $varvalue;
+		}
+		if ( empty($vartags) ) {
+			$this->EE->TMPL->log_item("surgeree:".$type.":".$var.":value:no_results");
+			return $this->EE->TMPL->no_results();
+		}
+
+		return $this->EE->TMPL->parse_variables( $td, $vartags );
+	}
 
 	private function _sanitize($value, $type = 'xss')
 	{
