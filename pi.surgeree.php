@@ -163,6 +163,11 @@ class Surgeree {
 		return $this->return_data = $this->_get_post('post');
 	}
 
+	/** Try to grab value of a variable, looking first in post, and then in get */
+	function get_post() {
+		return $this->return_data = $this->_get_post();
+	}
+
 	/** Helper function replacing number_format accounting for groupings other than thousands.
 	 *
 	 * Taken from php documentation comments. @see http://php.net/manual/en/function.number-format.php#95293
