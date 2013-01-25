@@ -474,6 +474,38 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	function string_2_date()
+	{
+		$date_string	= $this->EE->TMPL->fetch_param('string', '');
+		$format			= $this->EE->TMPL->fetch_param('format', '');
+		$tagdata		= $this->EE->TMPL->tagdata;
+		$localize		= $this->_processYesNo($this->EE->TMPL->fetch_param('localize', 'no'));
+
+		$date_string = ($tagdata != '' && $date_string == '') ? $tagdata : $date_string ;
+
+		$date_constants = $this->EE->localize->format;
+
+		foreach ($date_constants as $key => $val)
+		{
+			if ( $format === $key)
+			{
+				$format = $val;
+				break;
+			}
+		}
+
+		if ( $unixtime = strtotime($date_string) )
+		{
+			$this->return_data = $this->EE->localize->decode_date($format , $unixtime , $localize );
+		}
+		else
+		{
+			$this->return_data = '';
+		}
+
+		return $this->return_data;
+	}
+
 	/*
 		Strip HTML out of content. Can optionally allow html tags
 		Wrapper for @Link: http://us.php.net/strip_tags
