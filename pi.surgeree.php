@@ -259,6 +259,22 @@ class Surgeree {
 		}
 	}
 
+	/** Helper function replacing number_format accounting for groupings other than thousands.
+	 *
+	 * Taken from php documentation comments. @see http://php.net/manual/en/function.number-format.php#95293
+	 */
+	protected function _betterNumberFormat($number, $precision, $decimal, $separator, $groupsize) {
+		$number = sprintf("%0.{$precision}f",$number);
+		$number = explode('.',$number);
+		while (strlen($number[0]) % $groupsize) $number[0]= ' '.$number[0];
+		$number[0] = str_split($number[0],$groupsize);
+		$number[0] = join($separator[0],$number[0]);
+		$number[0] = trim($number[0]);
+		$number = join($decimal[0],$number);
+
+		return $number;
+	}
+
 	/**
 	 * Formats a passed number in specified format. Useful for localization.
 	 */
