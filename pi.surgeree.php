@@ -678,9 +678,7 @@ class Surgeree {
 		$var		= $this->EE->TMPL->fetch_param('varname', '');
 		$td			= ltrim($this->EE->TMPL->tagdata);
 		$sanitize 	= $this->EE->TMPL->fetch_param('sanitize', 'xss');
-		$check_XID	= $this->_processYesNo($this->EE->TMPL->fetch_param('check_xid', 'yes'))
-					? $this->_processYesNo($this->EE->config->item('secure_forms')) // CP -> Admin -> Security and Privacy -> Security and Sessions
-					: FALSE	;
+		$check_XID	= $this->_processYesNo($this->EE->TMPL->fetch_param( 'check_xid', $this->EE->config->item('secure_forms')) );// CP -> Admin -> Security and Privacy -> Security and Sessions
 		$glue		= $this->EE->TMPL->fetch_param('glue', '');
 		$delimiter 	= $this->EE->TMPL->fetch_param('delimiter', '');
 
