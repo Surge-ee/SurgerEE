@@ -791,6 +791,17 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	function parse_file_paths() {
+		if ($td = $this->EE->TMPL->tagdata)
+		{
+			$this->EE->load->library('typography');
+			$this->EE->typography->initialize();
+			$this->EE->typography->parse_images = TRUE;
+
+			return $this->return_data = $this->EE->typography->parse_file_paths($td);
+		}
+	}
+
 	/**
 	 * Allows us to read the value of any dynamic variables being set on the page.
 	 */
