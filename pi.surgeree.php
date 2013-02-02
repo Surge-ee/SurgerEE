@@ -720,9 +720,9 @@ class Surgeree {
 
 		$varvalues	= is_array($varvalue)
 					? $varvalue
-					: $delimiter !== ''
+					: ( $delimiter !== ''
 					? explode($delimiter, $varvalue)
-					: array($varvalue);
+					: array($varvalue) );
 
 		foreach ($varvalues as $value)
 		{
