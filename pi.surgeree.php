@@ -565,6 +565,17 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	function parse_file_paths() {
+		if ($td = $this->EE->TMPL->tagdata)
+		{
+			$this->EE->load->library('typography');
+			$this->EE->typography->initialize();
+			$this->EE->typography->parse_images = TRUE;
+
+			return $this->return_data = $this->EE->typography->parse_file_paths($td);
+		}
+	}
+
 	// -- Private Helpers -- //
 	private function _get_post($type = 'get_post') {
 		$var		= $this->EE->TMPL->fetch_param('varname', '');
