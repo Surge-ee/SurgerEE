@@ -501,6 +501,19 @@ class Surgeree {
 			return redirect($location,$redirect_method,$response_code);
 		}
 	}
+
+	function content_type(){
+		if ($content_type = $this->EE->TMPL->fetch_param('type',FALSE))
+		{
+			$this->EE->TMPL->template_type = 'cp_asset';// avoid to EE send headers // idea from https://github.com/rsanchez/http_header
+			$this->EE->output->set_header('Content-Type: '.$content_type.'; charset='.strtolower($this->EE->config->item('charset')));
+		}
+		if ($filename = $this->EE->TMPL->fetch_param('filename',FALSE))
+		{
+			$this->EE->output->set_header('Content-Disposition: attachment; filename="'.$filename.'"');
+		}
+	}
+
 	/** Attempts to make a proper title out of a url_title not associated with a entry. */
 	function proper_title() {
 		$url_title = $this->EE->TMPL->fetch_param('url_title', '');
