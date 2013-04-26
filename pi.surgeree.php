@@ -553,18 +553,6 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** Ensures presence of http in a url, to prevent urls from pointing to wrong domain. */
-	function ensure_http() {
-		$this->return_data = $this->EE->TMPL->tagdata;
-		if ($this->return_data == '') return '';
-
-		if (strpos($this->return_data, 'http://') === FALSE) {
-			$this->return_data = 'http://'.$this->return_data;
-		}
-
-		return $this->return_data;
-	}
-
 	/** Allows us to read the value of any dynamic variables being set on the page. */
 	function read_dynamic_variable() {
 		$variable = $this->EE->TMPL->fetch_param('variable');
