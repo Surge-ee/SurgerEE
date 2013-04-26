@@ -384,12 +384,16 @@ class Surgeree {
 
 	function string_2_date()
 	{
-		$date_string	= $this->EE->TMPL->fetch_param('string', '');
-		$format			= $this->EE->TMPL->fetch_param('format', '');
-		$tagdata		= $this->EE->TMPL->tagdata;
-		$localize		= $this->_processYesNo($this->EE->TMPL->fetch_param('localize', 'no'));
-
-		$date_string = ($tagdata != '' && $date_string == '') ? $tagdata : $date_string ;
+		$tagdata     = $this->EE->TMPL->tagdata;
+		$date_string = $this->EE->TMPL->fetch_param('string', $tagdata);
+		$format      = $this->EE->TMPL->fetch_param('format', '');
+		$localize    = $this->EE->TMPL->fetch_param('localize', 'no');
+		
+		//EECMS 2.6 accepts PHP timezones too
+		if ( strpos($localize, '/') === FALSE)
+		{
+			$localize		=		$this->_processYesNo( $localize );
+		}
 
 		$date_constants = $this->EE->localize->format;
 
@@ -404,7 +408,14 @@ class Surgeree {
 
 		if ( $unixtime = strtotime($date_string) )
 		{
-			$this->return_data = $this->EE->localize->decode_date($format , $unixtime , $localize );
+			if ( @ee()->localize->format_date() )
+			{
+				$this->return_data = ee()->localize->format_date ($format , $unixtime , $localize );
+			}
+			else 
+			{
+				$this->return_data = $this->EE->localize->decode_date($format , $unixtime , $localize );
+			}
 		}
 		else
 		{
