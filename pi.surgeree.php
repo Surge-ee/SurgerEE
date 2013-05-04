@@ -447,13 +447,14 @@ class Surgeree {
 
 	function url_encode() {
 		$use_raw_method = $this->_processYesNo($this->EE->TMPL->fetch_param('raw','yes'));
-
+		$tagdata = $this->_processYesNo( $this->EE->TMPL->fetch_param('parse_conditionals', 'no') )
+				? $this->EE->TMPL->advanced_conditionals($this->EE->TMPL->tagdata)
+				: $this->EE->TMPL->tagdata;
 		if ($use_raw_method) {
-			$this->return_data = rawurlencode($this->EE->TMPL->tagdata);
+			$this->return_data = rawurlencode($tagdata);
 		} else {
-			$this->return_data = urlencode($this->EE->TMPL->tagdata);
+			$this->return_data = urlencode($tagdata);
 		}
-
 		return $this->return_data;
 	}
 
