@@ -41,11 +41,19 @@ $plugin_info = array(
 
 class Surgeree {
 
+	/**
+	 * @var Return value for EE template parsing.
+	 */
 	public $return_data;
 
+	/**
+	 * @var The prefix parameter passed to any method.
+	 */
 	private $prefix = '';
 
-	/** Constructor */
+	/**
+	 * Always-run code.
+	 */
 	public function __construct() {
 
 		// Superglobal
@@ -115,10 +123,12 @@ class Surgeree {
 	//  Tag Methods
 	// ------------------------------------------------------------------------
 
-	/** Applies the modulo operator to a numerator and denominator.
+	/**
+	 * Applies the modulo operator to a numerator and denominator.
 	 *
 	 * Useful for outputting stuff every third, fourth, etc entry in
-	 * a loop. */
+	 * a loop.
+	 */
 	function modulo() {
 		$numerator = $this->EE->TMPL->fetch_param('numerator', '1');
 		$denominator = $this->EE->TMPL->fetch_param('denominator', '1');
@@ -127,7 +137,9 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** Generic divide-then-round. */
+	/**
+	 * Generic divide-then-round.
+	 */
 	function round_divide() {
 		$numerator = (int) $this->EE->TMPL->fetch_param('numerator', '1');
 		$denominator = (int) $this->EE->TMPL->fetch_param('denominator', '1');
@@ -137,14 +149,18 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** Grab value of a get variable */
+	/**
+	 * Grab value of a get variable
+	 */
 	function get() {
 		$key = $this->EE->TMPL->fetch_param('varname');
 		$this->return_data = $this->EE->input->get($key, TRUE);
 		return $this->return_data;
 	}
 
-	/** Grab value of a post variable */
+	/**
+	 * Grab value of a post variable
+	 */
 	function post() {
 		$var		= $this->EE->TMPL->fetch_param('varname', '');
 		$td			= ltrim($this->EE->TMPL->tagdata);
@@ -243,7 +259,9 @@ class Surgeree {
 		}
 	}
 
-	/** Formats a passed number in specified format. Useful for localization. */
+	/**
+	 * Formats a passed number in specified format. Useful for localization.
+	 */
 	function format_number() {
 		// Get the number to apply this to.
 		$number = trim($this->EE->TMPL->fetch_param('number', ''));
@@ -264,7 +282,8 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** A looping tag returning all of the years for which there are entries.
+	/**
+	 * A looping tag returning all of the years for which there are entries.
 	 *
 	 * Very useful for generating archive links based on calendar year.
 	 *
@@ -334,9 +353,11 @@ class Surgeree {
 		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
 	}
 
-	/** Checks if an integer is halfway rounded up or down through the total.
+	/**
+	 * Checks if an integer is halfway rounded up or down through the total.
 	 *
-	 * Useful for determining if you are halfway through a loop. */
+	 * Useful for determining if you are halfway through a loop.
+	 */
 	function is_halfway() {
 		$count = $this->EE->TMPL->fetch_param('count');
 		$total = $this->EE->TMPL->fetch_param('total');
@@ -371,7 +392,9 @@ class Surgeree {
 		return $this->return_data = $this->EE->TMPL->parse_variables( ltrim($this->EE->TMPL->tagdata), $vartags );
 	}
 
-	/** Performs a regex replace on a string */
+	/**
+	 * Performs a regex replace on a string
+	 */
 	function replace() {
 		$param = $this->EE->TMPL->fetch_param('string', '');
 		$tagdata = $this->EE->TMPL->tagdata;
@@ -384,7 +407,9 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** Performs a multiple regex replace on a string */
+	/**
+	 * Performs a multiple regex replace on a string
+	 */
 	function replace_multiple() {
 		$param = $this->EE->TMPL->fetch_param('string', '');
 		$tagdata = $this->EE->TMPL->tagdata;
@@ -408,7 +433,9 @@ class Surgeree {
 	}
 
 
-	/** Searches for a regex in a string */
+	/**
+	 * Searches for a regex in a string
+	 */
 	function match() {
 		$string = $this->EE->TMPL->fetch_param('string', '');
 		$regex   = $this->EE->TMPL->fetch_param('regex', '');
@@ -418,7 +445,9 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** Just loops a certain number of times. */
+	/**
+	 * Just loops a certain number of times.
+	 */
 	function loop() {
 
 		$iters     = (int) $this->EE->TMPL->fetch_param('iterations', '1');
@@ -441,7 +470,8 @@ class Surgeree {
 
 	}
 
-	/** Loops enough times to make a completed parent loop divisible by a number.
+	/**
+	 * Loops enough times to make a completed parent loop divisible by a number.
 	 *
 	 * Useful for instance in a carousel which is getting dummy slides filled in
 	 * to make each page have a certain number of slides.  Say the carousel takes
@@ -526,9 +556,10 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/*
-		Strip HTML out of content. Can optionally allow html tags
-		Wrapper for @Link: http://us.php.net/strip_tags
+	/**
+	 * Strip HTML out of content. Can optionally allow html tags
+	 *
+	 * Wrapper for @link: http://us.php.net/strip_tags
 	 */
 	function strip_tags() {
 
@@ -570,10 +601,12 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	/**
+	 * Ensure valid urls.
+	 *
+	 * @see  https://github.com/EllisLab/Valid-Url/blob/master/valid_url/pi.valid_url.php
+	 */
 	function url_fix() {
-/**
- * @see  https://github.com/EllisLab/Valid-Url/blob/master/valid_url/pi.valid_url.php
- */
 		$protected = array('&' => 'AMPERSANDMARKER', '/' => 'SLASHMARKER', '=' => 'EQUALSMARKER');
 
 		$str = str_replace(SLASH, '/', trim(urldecode(str_replace('&amp;', '&', $this->EE->TMPL->tagdata))));
@@ -614,7 +647,9 @@ class Surgeree {
 			return redirect($location,$redirect_method,$response_code);
 		}
 	}
-	/** Attempts to make a proper title out of a url_title not associated with a entry. */
+	/**
+	 * Attempts to make a proper title out of a url_title not associated with a entry.
+	 */
 	function proper_title() {
 		$url_title = $this->EE->TMPL->fetch_param('url_title', '');
 
@@ -622,18 +657,26 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** Returns the number of segments in the current page's url. */
+	/**
+	 * Returns the number of segments in the current page's url.
+	 */
 	function total_segments() {
 		return $this->EE->uri->total_segments();
 	}
 
-	/** Returns the entire url for the current page, including domain and protocol. */
+	/**
+	 * Returns the entire url for the current page, including domain and protocol.
+	 */
 	function current_url() {
 		$this->EE->load->helper('url');
 		return current_url();
 	}
 
-	/** Returns the entire uri for the current page, including the first /, to match the behavior of the page_uri of exp:channel:entries. */
+	/**
+	 * Returns the entire uri for the current page
+	 *
+	 * Includes the first /, to match the behavior of the page_uri of exp:channel:entries.
+	 */
 	function current_uri() {
 		$uri = $this->EE->uri->uri_string();
 		return (substr($uri, 0) !== '/') ? '/'.$uri : $uri;
@@ -653,7 +696,9 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** Ensures presence of http in a url, to prevent urls from pointing to wrong domain. */
+	/**
+	 * Ensures presence of http in a url, to prevent urls from pointing to wrong domain.
+	 */
 	function ensure_http() {
 		$this->return_data = $this->EE->TMPL->tagdata;
 		if ($this->return_data == '') return '';
@@ -665,7 +710,9 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** Ensures that a trailing slash in a url is either present or not. */
+	/**
+	 * Ensures that a trailing slash in a url is either present or not.
+	 */
 	function trailing_slash() {
 
 		$trim = $this->_processYesNo($this->EE->TMPL->fetch_param('trim', 'no'));
@@ -681,7 +728,9 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	/** Allows us to read the value of any dynamic variables being set on the page. */
+	/**
+	 * Allows us to read the value of any dynamic variables being set on the page.
+	 */
 	function read_dynamic_variable() {
 		$variable = $this->EE->TMPL->fetch_param('variable');
 
@@ -698,6 +747,9 @@ class Surgeree {
 	//  Usage
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Usage to be displayed on the control panel documentation page.
+	 */
 	public static function usage() {
 		$buffer = 'See documentation on <a href="https://github.com/dsurgeons/SurgerEE/wiki">github</a>.';
 		/*$readme_file = ltrim(dirname(__FILE__), '/').'/README.md';
