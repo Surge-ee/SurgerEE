@@ -346,11 +346,11 @@ class Surgeree {
 		$variables = array();
 		foreach($query->result() as $row) {
 			$variables[] = array(
-				'surgeree:years:year' => $row->year
+				'year' => $row->year
 			);
 		}
 
-		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
+		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $this->_prefixify($variables));
 	}
 
 	/**
@@ -373,6 +373,9 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	/**
+	 * Splits a string by a delimiter.
+	 */
 	function split_string() {
 		$delimiter = $this->EE->TMPL->fetch_param('delimiter', '');
 		$string = $this->EE->TMPL->fetch_param('string', '');
@@ -385,11 +388,10 @@ class Surgeree {
 		$a = explode($delimiter, $string);
 
 		foreach ($a as $v) {
-			$vartags[] =  array('surgeree:split_string:item' => $v);
-			$this->EE->TMPL->log_item("surgeree:split_string:".$string.":item: ".$v);
+			$vartags[] =  array('item' => $v);
 		}
 
-		return $this->return_data = $this->EE->TMPL->parse_variables( ltrim($this->EE->TMPL->tagdata), $vartags );
+		return $this->return_data = $this->EE->TMPL->parse_variables(ltrim($this->EE->TMPL->tagdata), $this->_prefixify($vartags));
 	}
 
 	/**
@@ -492,13 +494,13 @@ class Surgeree {
 		$j = 1;
 		for ($i = 1; $i <= $needed_iterations; $i += 1) {
 			$variables[] = array(
-				'surgeree:loop_fill:current' => $j,
-				'surgeree:loop_fill:total' => $needed_iterations
+				'current' => $j,
+				'total' => $needed_iterations
 			);
 			$j++;
 		}
 
-		$this->return_data = (empty($variables)) ? '' : $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
+		$this->return_data = (empty($variables)) ? '' : $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $this->_prefixify($variables));
 
 		return $this->return_data;
 	}
