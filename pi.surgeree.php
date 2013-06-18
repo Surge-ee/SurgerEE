@@ -53,7 +53,12 @@ class Surgeree {
 
 		// Set prefix if in params.
 		$this->prefix = $this->EE->TMPL->fetch_param('prefix', '');
+
 	}
+
+	// ------------------------------------------------------------------------
+	//  Helpers
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Recursively apply the prefix to a "parse variables" array's keys.
@@ -76,6 +81,39 @@ class Surgeree {
 		return $return;
 
 	}
+
+	/**
+	 * Helper function replacing number_format accounting for groupings other than thousands.
+	 *
+	 * Taken from php documentation comments. @see http://php.net/manual/en/function.number-format.php#95293
+	 */
+	private function _betterNumberFormat($number, $precision, $decimal, $separator, $groupsize) {
+		$number = sprintf("%0.{$precision}f",$number);
+		$number = explode('.',$number);
+		while (strlen($number[0]) % $groupsize) $number[0]= ' '.$number[0];
+		$number[0] = str_split($number[0],$groupsize);
+		$number[0] = join($separator[0],$number[0]);
+		$number[0] = trim($number[0]);
+		$number = join($decimal[0],$number);
+
+		return $number;
+	}
+
+	/**
+	 * Abstracts out the process of determining Yes/No, Y/N, True/False string booleans.
+	 *
+	 * @param  string $value String to be interpreted in boolean context.
+	 * @return bool   Authentic boolean representation.
+	 */
+	private function _processYesNo($value) {
+		$lowered = strtolower($value);
+
+		return ($lowered === 'yes' || $lowered === 'y' || $lowered === 'true');
+	}
+
+	// ------------------------------------------------------------------------
+	//  Tag Methods
+	// ------------------------------------------------------------------------
 
 	/** Applies the modulo operator to a numerator and denominator.
 	 *
@@ -203,22 +241,6 @@ class Surgeree {
 
 			return $this->return_data = $this->EE->TMPL->parse_variables( $td, $vartags );
 		}
-	}
-
-	/** Helper function replacing number_format accounting for groupings other than thousands.
-	 *
-	 * Taken from php documentation comments. @see http://php.net/manual/en/function.number-format.php#95293
-	 */
-	protected function _betterNumberFormat($number, $precision, $decimal, $separator, $groupsize) {
-		$number = sprintf("%0.{$precision}f",$number);
-		$number = explode('.',$number);
-		while (strlen($number[0]) % $groupsize) $number[0]= ' '.$number[0];
-		$number[0] = str_split($number[0],$groupsize);
-		$number[0] = join($separator[0],$number[0]);
-		$number[0] = trim($number[0]);
-		$number = join($decimal[0],$number);
-
-		return $number;
 	}
 
 	/** Formats a passed number in specified format. Useful for localization. */
@@ -672,21 +694,10 @@ class Surgeree {
 		return $this->return_data;
 	}
 
-	// -- Private Helpers -- //
+	// ------------------------------------------------------------------------
+	//  Usage
+	// ------------------------------------------------------------------------
 
-	/**
-	 * Abstracts out the process of determining Yes/No, Y/N, True/False string booleans.
-	 *
-	 * @param string $value String to be interpreted in boolean context.
-	 * @return bool Authentic boolean representation.
-	 */
-	private function _processYesNo($value) {
-		$lowered = strtolower($value);
-
-		return ($lowered === 'yes' || $lowered === 'y' || $lowered === 'true');
-	}
-
-	// -- Plugin Usage -- //
 	public static function usage() {
 		$buffer = 'See documentation on <a href="https://github.com/dsurgeons/SurgerEE/wiki">github</a>.';
 		/*$readme_file = ltrim(dirname(__FILE__), '/').'/README.md';
@@ -694,8 +705,8 @@ class Surgeree {
 
 		return $buffer;
 	}
-}
 
+}
 
 /* End of file pi.surgeree.php */
 /* Location: /system/expressionengine/third_party/surgeree/pi.surgeree.php */
