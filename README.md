@@ -13,6 +13,10 @@ Simply copy the `pi.surgeree.php` file into a directory called `surgeree` inside
 
 Please see the [wiki](https://github.com/dsurgeons/SurgerEE/wiki) for in depth documentation.
 
+## Tests
+
+This addon comes with a test suite that can be run by installing the [testee](http://devot-ee.com/add-ons/testee) addon and running from it's module page.
+
 ## Contributors
 
 The following community members have made contributions to this project:
