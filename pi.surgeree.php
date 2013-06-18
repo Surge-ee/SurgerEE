@@ -420,8 +420,10 @@ class Surgeree {
 		$regex   = $this->EE->TMPL->fetch_param('regex', '');
 		$replace  = $this->EE->TMPL->fetch_param('replace', '');
 
+		$regex = (substr($regex, 0, 1) == '/' && substr($regex, -1) == '/') ? $regex : "/$regex/";
+
 		//Output transformed string
-		$this->return_data = preg_replace("/$regex/", $replace, $string);
+		$this->return_data = preg_replace($regex, $replace, $string);
 		return $this->return_data;
 	}
 
