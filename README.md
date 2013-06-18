@@ -5,17 +5,9 @@ A collection of simple tags for expressionengine that make template surgery easi
 
 ## Installation
 
-### Simple Installation
-
 Simply copy the `pi.surgeree.php` file into a directory called `surgeree` inside the third_party folder of your ExpressionEngine installation.
 
-### Fancy Installation (for git users)
-
-Make this repo into a submodule for your project's private ExpressionEngine git repo.
-
-	git submodule add git://github.com/dsurgeons/SurgerEE.git system/expressionengine/third_party/surgeree
-
-For added flexiblity, fork this repo and make the submodule to your fork instead. Don't forget to submit pull requests after you've added stuff :).
+> Note that we no longer recommend using submodules to install this add-on (after having been bit by that over and over again), though this add-on is still compatible with that method.
 
 ## Documentation
 
