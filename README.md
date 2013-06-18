@@ -32,6 +32,8 @@ The following community members have made contributions to this project:
  - [fideloper](https://github.com/fideloper)
  	- Add Strip_tags
 
+ Maintained by [EpocSquadron](https://github.com/epocsquadron).
+
 ## Changelog
 
 Version 1.5.3
