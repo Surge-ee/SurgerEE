@@ -613,6 +613,22 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	/** Ensures that a trailing slash in a url is either present or not. */
+	function trailing_slash() {
+
+		$trim = $this->_processYesNo($this->EE->TMPL->fetch_param('trim', 'no'));
+		$has_trailing_slash = substr($this->EE->TMPL->tagdata, -1) === '/';
+		$this->return_data = $this->EE->TMPL->tagdata;
+
+		if ($trim && $has_trailing_slash) {
+			$this->return_data = substr($this->return_data, 0, -1);
+		} elseif (!$trim && !$has_trailing_slash) {
+			$this->return_data = $this->return_data . '/';
+		}
+
+		return $this->return_data;
+	}
+
 	/** Allows us to read the value of any dynamic variables being set on the page. */
 	function read_dynamic_variable() {
 		$variable = $this->EE->TMPL->fetch_param('variable');
