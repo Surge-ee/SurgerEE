@@ -43,9 +43,38 @@ class Surgeree {
 
 	public $return_data;
 
+	private $prefix = '';
+
 	/** Constructor */
 	public function __construct() {
+
+		// Superglobal
 		$this->EE =& get_instance();
+
+		// Set prefix if in params.
+		$this->prefix = $this->EE->TMPL->fetch_param('prefix', '');
+	}
+
+	/**
+	 * Recursively apply the prefix to a "parse variables" array's keys.
+	 *
+	 * @param  array $variables An array to be passed to EE->TMPL->parse_variables.
+	 * @return array The same array with prefixed keys.
+	 */
+	private function _prefixify($variables) {
+
+		$return = array();
+
+		foreach($variables as $key => $value) {
+			// We only want to rewrite string keys.
+			$newkey = is_integer($key) ? $key : $this->prefix.':'.$key;
+
+			// We will want to recurse through values as well.
+			$return[$newkey] = is_array($value) ? $this->_prefixify($value) : $value;
+		}
+
+		return $return;
+
 	}
 
 	/** Applies the modulo operator to a numerator and denominator.
@@ -369,24 +398,25 @@ class Surgeree {
 
 	/** Just loops a certain number of times. */
 	function loop() {
-		$iters = (int) $this->EE->TMPL->fetch_param('iterations', '1');
+
+		$iters     = (int) $this->EE->TMPL->fetch_param('iterations', '1');
 		$increment = (int) $this->EE->TMPL->fetch_param('increment', '1');
-		$start = (int) $this->EE->TMPL->fetch_param('start', '1');
-
-		$total = floor($iters/$increment);
-
+		$start     = (int) $this->EE->TMPL->fetch_param('start', '1');
+		$total     = floor($iters/$increment);
 		$variables = array();
+
 		$j = $start;
-		for ($i = 1; $i <= $iters; $i += $increment) {
+		for ($i = 0; $i < $iters; $i += $increment) {
 			$variables[] = array(
-				'surgeree:loop:index'	=> $j-1,
-				'surgeree:loop:current' => $j,
-				'surgeree:loop:total' => $total
+				'index'	=> $i + 1,
+				'current' => $j,
+				'total' => $total
 			);
 			$j++;
 		}
 
-		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
+		return $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $this->_prefixify($variables));
+
 	}
 
 	/** Loops enough times to make a completed parent loop divisible by a number.
