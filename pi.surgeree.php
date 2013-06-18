@@ -227,7 +227,7 @@ class Surgeree {
 							$value = sanitize_search_terms( $value );
 						}
 
-						$vartags[] =  array('surgeree:post:value' => $value);
+						$vartags[] =  array('value' => $value);
 						$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$value);
 					}
 				}
@@ -242,11 +242,11 @@ class Surgeree {
 					$varvalues = explode($split_by, $varvalue);
 
 					foreach ($varvalues as $value) {
-						$vartags[] =  array('surgeree:post:value' => $value);
+						$vartags[] =  array('value' => $value);
 						$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$value);
 					}
 				} else {
-					$vartags[] =  array('surgeree:post:value' => $varvalue);
+					$vartags[] =  array('value' => $varvalue);
 					$this->EE->TMPL->log_item("surgeree:post:".$var.":value: ".$varvalue);
 				}
 			}
@@ -255,7 +255,7 @@ class Surgeree {
 				return $this->return_data = $this->EE->TMPL->no_results();
 			}
 
-			return $this->return_data = $this->EE->TMPL->parse_variables( $td, $vartags );
+			return $this->return_data = $this->EE->TMPL->parse_variables( $td, $this->_prefixify($vartags) );
 		}
 	}
 
