@@ -452,17 +452,18 @@ class Surgeree {
 	 */
 	function loop() {
 
-		$iters     = (int) $this->EE->TMPL->fetch_param('iterations', '1');
-		$increment = (int) $this->EE->TMPL->fetch_param('increment', '1');
-		$start     = (int) $this->EE->TMPL->fetch_param('start', '1');
-		$total     = floor($iters/$increment);
-		$variables = array();
+		$zero_based = $this->_processYesNo($this->EE->TMPL->fetch_param('zero_based', 'no'));
+		$iters      = (int) $this->EE->TMPL->fetch_param('iterations', '1');
+		$increment  = (int) $this->EE->TMPL->fetch_param('increment', '1');
+		$start      = (int) $this->EE->TMPL->fetch_param('start', '1');
+		$total      = floor($iters/$increment);
+		$variables  = array();
 
 		$j = $start;
 		for ($i = 0; $i < $iters; $i += $increment) {
 			$variables[] = array(
-				'index'	=> $i + 1,
-				'current' => $j,
+				'index'	=> ($zero_based) ? $i - 1 : $i,
+				'current' => ($zero_based) ? $j - 1 : $j,
 				'total' => $total
 			);
 			$j++;
