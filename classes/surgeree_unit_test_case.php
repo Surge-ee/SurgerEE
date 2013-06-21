@@ -40,7 +40,7 @@ class Surgeree_unit_test_case extends Testee_unit_test_case {
 	 * @param  string $methodName The name of the plugin method to get defaults for
 	 * @return void
 	 */
-	protected function _setParamDefaults($methodName) {
+	protected function _setParamDefaults($methodName, $exceptions = array()) {
 
 		// Here we use reflection to figure out what file
 		// contents to get to inspect the plugin method.
@@ -55,7 +55,11 @@ class Surgeree_unit_test_case extends Testee_unit_test_case {
 		// Finally we can set these values as the return
 		// for calls to any given plugin parameter.
 		foreach ($defaults as $param => $value) {
-			$this->_setParam($param, $value);
+			if (!in_array($param, $exceptions)) {
+
+				$this->_setParam($param, $value);
+
+			}
 		}
 
 	}
