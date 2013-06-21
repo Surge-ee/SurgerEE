@@ -37,7 +37,12 @@ class Surgeree_unit_test_case extends Testee_unit_test_case {
 	 * defined in the second argument. Otherwise our tests would have to
 	 * make assumptions about what those defaults that are passed are.
 	 *
+	 * This will override any _setParam for this method, even if it is
+	 * called after this method. Use the exceptions array to prevent
+	 * specific params from getting set to their default.
+	 *
 	 * @param  string $methodName The name of the plugin method to get defaults for
+	 * @param  array  $exceptions Param names not to set with their defaults.
 	 * @return void
 	 */
 	protected function _setParamDefaults($methodName, $exceptions = array()) {
