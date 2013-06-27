@@ -524,6 +524,26 @@ class Surgeree {
 		return $this->return_data;
 	}
 
+	function has_category() {
+
+		$entry_id = (int) $this->EE->TMPL->fetch_param('entry_id', 0);
+		$category_id = (int) $this->EE->TMPL->fetch_param('category_id', 0);
+
+		// If the passed params arent a number, or no
+		// param is passed at all, we'll get zero
+		// Save a query and kick out now
+		if ($entry_id === 0 || $category_id === 0) return 'n';
+
+		// Nice an easy, theres a lookup table for us
+		$results = $this->EE->db->where(array(
+				'entry_id' => $entry_id,
+				'cat_id' => $category_id
+			))->count_all_results('category_posts');
+
+		return ($results == 1) ? 'y' : 'n';
+
+	}
+
 	function url_title_2_entry_id() {
 		$url_title = $this->EE->TMPL->fetch_param('url_title', '');
 
