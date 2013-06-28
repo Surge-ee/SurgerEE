@@ -4,65 +4,72 @@ require_once PATH_THIRD.'surgeree/classes/surgeree_unit_test_case.php';
 
 class Test_format_number extends Surgeree_unit_test_case {
 
+	protected $_methodName = 'format_number';
+
 	function test__returns_nothing_with_all_default_params() {
 
-		$this->_setParamDefaults('format_number');
+		$this->setParams();
 
-		$result = $this->_subject->format_number();
+		$result = $this->runMethod();
 		$this->assertEqual($result, '');
 
 	}
 
 	function test__returns_english_currency_format_with_default_params() {
 
-		$this->_setParamDefaults('format_number', array('number'));
-		$this->_setParam('number', '2000');
+		$this->setParams(array(
+			'number' => '2000'
+		));
 
-		$result = $this->_subject->format_number();
+		$result = $this->runMethod();
 		$this->assertEqual($result, '2,000.00');
 
 	}
 
 	function test__precision_parameter_respected() {
 
-		$this->_setParamDefaults('format_number', array('number', 'precision'));
-		$this->_setParam('number', '2');
-		$this->_setParam('precision', '3');
+		$this->setParams(array(
+			'number' => 2,
+			'precision' => 3
+		));
 
-		$result = $this->_subject->format_number();
+		$result = $this->runMethod();
 		$this->assertEqual($result, '2.000');
 
 	}
 
 	function test__decimal_parameter_respected() {
 
-		$this->_setParamDefaults('format_number', array('number', 'decimal'));
-		$this->_setParam('number', '2');
-		$this->_setParam('decimal', '\'');
+		$this->setParams(array(
+			'number' => 2,
+			'decimal' => "'"
+		));
 
-		$result = $this->_subject->format_number();
-		$this->assertEqual($result, '2\'00');
+		$result = $this->runMethod();
+		$this->assertEqual($result, "2'00");
 
 	}
 
 	function test__separator_parameter_respected() {
 
-		$this->_setParamDefaults('format_number', array('number', 'separator'));
-		$this->_setParam('number', '20000');
-		$this->_setParam('separator', '.');
+		$this->setParams(array(
+			'number' => '20000',
+			'separator' => '.'
+		));
 
-		$result = $this->_subject->format_number();
+		$result = $this->runMethod();
 		$this->assertEqual($result, '20.000.00');
 
 	}
 
 	function test__groupsize_parameter_respected() {
 
-		$this->_setParamDefaults('format_number', array('number', 'groupsize'));
-		$this->_setParam('number', '20000');
-		$this->_setParam('groupsize', '4');
+		$this->setParams(array(
+			'number' => '20000',
+			'groupsize' => '4'
+		));
 
-		$result = $this->_subject->format_number();
+		$result = $this->runMethod();
 		$this->assertEqual($result, '2,0000.00');
 
 	}

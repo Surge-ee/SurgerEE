@@ -4,12 +4,23 @@ require_once PATH_THIRD.'surgeree/pi.surgeree.php';
 
 class Surgeree_unit_test_case extends Testee_unit_test_case {
 
+	/**
+	 * @var The module instance being tested
+	 */
 	protected $_subject;
+
+	/**
+	 * @var The name of the method being tested.
+	 *
+	 * Should be set in the child setUp() method.
+	 */
+	protected $_methodName;
 
 	/**
 	 * Always set up Surgeree as the subject.
 	 */
 	function setUp() {
+
 		parent::setUp();
 
 		$this->_subject = new Surgeree();
@@ -17,54 +28,24 @@ class Surgeree_unit_test_case extends Testee_unit_test_case {
 	}
 
 	/**
-	 * This is a shortcut for mocking the value of a parameter for a plugin tag.
+	 * Allows us to use default and user specified values for fetch_param mock
 	 *
-	 * @param  string $param The parameter name.
-	 * @param  string $value The value to set the parameter to.
+	 * @param  array  $params Parameters that would be passed from the template
 	 * @return void
 	 */
-	protected function _setParam($param, $value) {
+	protected function setParams($params = null) {
 
-		$this->_subject->EE->TMPL->returns('fetch_param', $value, array($param, '*'));
-
-	}
-
-	/**
-	 * Mocks fetch_param to return the passed default value.
-	 *
-	 * For example, when a tested method has fetch_param('numerator', '1'),
-	 * we can use this to set the return value of that call to '1' as is
-	 * defined in the second argument. Otherwise our tests would have to
-	 * make assumptions about what those defaults that are passed are.
-	 *
-	 * This will override any _setParam for this method, even if it is
-	 * called after this method. Use the exceptions array to prevent
-	 * specific params from getting set to their default.
-	 *
-	 * @param  string $methodName The name of the plugin method to get defaults for
-	 * @param  array  $exceptions Param names not to set with their defaults.
-	 * @return void
-	 */
-	protected function _setParamDefaults($methodName, $exceptions = array()) {
-
-		// Here we use reflection to figure out what file
-		// contents to get to inspect the plugin method.
-		$method = new ReflectionMethod('Surgeree', $methodName);
-
-		$contents = $this->_getMethodContents($method);
-
-		// Then we're using regex to pull out all the defaults
-		// and their corresponding parameter names.
-		$defaults = $this->_getFetchParamDefaults($contents);
+		$defaults = $this->_getParamDefaults($this->_methodName);
+		$params = (is_array($params)) ? array_merge($defaults, $params) : $defaults;
 
 		// Finally we can set these values as the return
 		// for calls to any given plugin parameter.
-		foreach ($defaults as $param => $value) {
-			if (!in_array($param, $exceptions)) {
+		foreach ($params as $param => $value) {
 
-				$this->_setParam($param, $value);
+			// We need to force values to strings, as that is what
+			// will always be actually passed to the method.
+			$this->_subject->EE->TMPL->returns('fetch_param', (string) $value, array($param, '*'));
 
-			}
 		}
 
 	}
@@ -75,9 +56,45 @@ class Surgeree_unit_test_case extends Testee_unit_test_case {
 	 * @param  string $data Whatever is supposed to be inside the tag pair.
 	 * @return void
 	 */
-	protected function _setTagdata($data) {
+	protected function setTagdata($data) {
 
 		$this->_subject->EE->TMPL->tagdata = $data;
+
+	}
+
+	/**
+	 * Shortcut for running the method
+	 *
+	 * @return mixed Whatever the method returns
+	 */
+	protected function runMethod() {
+
+		return $this->_subject->{$this->_methodName}();
+
+	}
+
+	/**
+	 * Retrieves the default values for all method parameters
+	 *
+	 * For example, when a tested method has fetch_param('numerator', '1'),
+	 * we can use this to set the return value of that call to '1' as is
+	 * defined in the second argument. Otherwise our tests would have to
+	 * make assumptions about what those defaults that are passed are.
+	 *
+	 * @param  string $methodName The name of the plugin method to get defaults for
+	 * @return array  The default values as key-value pairs.
+	 */
+	private function _getParamDefaults($methodName) {
+
+		// Here we use reflection to figure out what file
+		// contents to get to inspect the plugin method.
+		$method = new ReflectionMethod('Surgeree', $methodName);
+
+		$contents = $this->_getMethodContents($method);
+
+		// Then we're using regex to pull out all the defaults
+		// and their corresponding parameter names.
+		return $this->_parseParamDefaults($contents);
 
 	}
 
@@ -107,7 +124,7 @@ class Surgeree_unit_test_case extends Testee_unit_test_case {
 	 * @param  String $functionBody The method's contents.
 	 * @return Array  An array with param names as keys, defaults as values.
 	 */
-	private function _getFetchParamDefaults($functionBody) {
+	private function _parseParamDefaults($functionBody) {
 
 		preg_match_all('/fetch_param\([\'"]([^, ]+)[\'"](?:, +[\'"]?([^)\'"]*)[\'"]?)\)/', $functionBody, $matches);
 
