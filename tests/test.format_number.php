@@ -15,14 +15,14 @@ class Test_format_number extends Surgeree_unit_test_case {
 
 	}
 
-	function test__returns_english_currency_format_with_default_params() {
+	function test__returns_no_group_delimiter_and_two_decimal_digits_with_default_params() {
 
 		$this->setParams(array(
 			'number' => '2000'
 		));
 
 		$result = $this->runMethod();
-		$this->assertEqual($result, '2,000.00');
+		$this->assertEqual($result, '2000.00');
 
 	}
 
@@ -66,6 +66,7 @@ class Test_format_number extends Surgeree_unit_test_case {
 
 		$this->setParams(array(
 			'number' => '20000',
+			'separator' => ',',
 			'groupsize' => '4'
 		));
 
