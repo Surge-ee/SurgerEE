@@ -27,9 +27,8 @@ class Test_modulo extends Surgeree_unit_test_case {
 
 	}
 
-	public function test__returns_zero_with_non_number_args() {
+	public function test__returns_zero_with_non_number_numerator() {
 
-		// Numerator fed string
 		$this->setParams(array(
 			'numerator' => 'hey there',
 			'denominator' => 2
@@ -38,7 +37,10 @@ class Test_modulo extends Surgeree_unit_test_case {
 		$result = $this->runMethod();
 		$this->assertEqual($result, 0);
 
-		// Denominator fed string
+	}
+
+	public function test__returns_zero_with_non_number_denominator() {
+
 		$this->setParams(array(
 			'numerator' => 11,
 			'denominator' => 'hey there'
@@ -47,7 +49,10 @@ class Test_modulo extends Surgeree_unit_test_case {
 		$result = $this->runMethod();
 		$this->assertEqual($result, 0);
 
-		// Both fed string
+	}
+
+	public function test__returns_zero_with_non_number_args() {
+
 		$this->setParams(array(
 			'numerator' => 'hey there',
 			'denominator' => 'hey there'

@@ -69,7 +69,7 @@ class Test_has_category extends Surgeree_unit_test_case {
 
 	}
 
-	function test__returns_n_if_either_or_both_params_arent_int() {
+	function test__returns_n_if_entry_id_isnt_int() {
 
 		$this->EE->db->returns('count_all_results', 1, array('*'));
 
@@ -81,6 +81,12 @@ class Test_has_category extends Surgeree_unit_test_case {
 		$result = $this->runMethod();
 		$this->assertEqual($result, 'n');
 
+	}
+
+	function test__returns_n_if_category_id_isnt_int() {
+
+		$this->EE->db->returns('count_all_results', 1, array('*'));
+
 		$this->setParams(array(
 			'entry_id' => 1,
 			'category_id' => 'blah'
@@ -88,6 +94,12 @@ class Test_has_category extends Surgeree_unit_test_case {
 
 		$result = $this->runMethod();
 		$this->assertEqual($result, 'n');
+
+	}
+
+	function test__returns_n_if_neither_params_are_int() {
+
+		$this->EE->db->returns('count_all_results', 1, array('*'));
 
 		$this->setParams(array(
 			'entry_id' => 'blah',
