@@ -75,4 +75,26 @@ class Test_format_number extends Surgeree_unit_test_case {
 
 	}
 
+	function test__lots_of_decimal_places_get_rounded_up_with_default_precision() {
+
+		$this->setParams(array(
+			'number' => '2.3456789'
+		));
+
+		$result = $this->runMethod();
+		$this->assertEqual($result, '2.35');
+
+	}
+
+	function test__lots_of_decimal_places_get_rounded_down_with_default_precision() {
+
+		$this->setParams(array(
+			'number' => '2.341122'
+		));
+
+		$result = $this->runMethod();
+		$this->assertEqual($result, '2.34');
+
+	}
+
 }
