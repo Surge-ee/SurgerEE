@@ -93,18 +93,34 @@ class Surgeree {
 	/**
 	 * Helper function replacing number_format accounting for groupings other than thousands.
 	 *
-	 * Taken from php documentation comments. @see http://php.net/manual/en/function.number-format.php#95293
+	 * Adapted from php documentation comments.
+	 * @see http://php.net/manual/en/function.number-format.php#95293
 	 */
 	private function _betterNumberFormat($number, $precision, $decimal, $separator, $groupsize) {
-		$number = sprintf("%0.{$precision}f",$number);
-		$number = explode('.',$number);
-		while (strlen($number[0]) % $groupsize) $number[0]= ' '.$number[0];
-		$number[0] = str_split($number[0],$groupsize);
-		$number[0] = join($separator[0],$number[0]);
+
+		// Groupsize must be numerical
+		$groupsize = (int) $groupsize;
+
+		// Split string into before and after decimal
+		$number = sprintf("%0.{$precision}f", $number);
+		$number = explode('.', $number);
+
+		// Split before decimal into groups of groupsize length
+		while (strlen($number[0]) % $groupsize) {
+			$number[0]= ' ' . $number[0];
+		}
+
+		$number[0] = str_split($number[0], $groupsize);
+
+		// Rejoin before the decimal with separator character
+		$number[0] = join($separator, $number[0]);
 		$number[0] = trim($number[0]);
-		$number = join($decimal[0],$number);
+
+		// Rejoin the two halves with decimal character
+		$number = join($decimal, $number);
 
 		return $number;
+
 	}
 
 	/**
