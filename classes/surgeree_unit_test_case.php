@@ -126,9 +126,42 @@ class Surgeree_unit_test_case extends Testee_unit_test_case {
 	 */
 	private function _parseParamDefaults($functionBody) {
 
-		preg_match_all('/fetch_param\([\'"]([^, ]+)[\'"](?:, +[\'"]?([^)\'"]*)[\'"]?)\)/', $functionBody, $matches);
+		$return = array();
 
-		return array_combine($matches[1], $matches[2]);
+		// Get all the fetch_param calls
+		preg_match_all('/fetch_param\(([^)]+)\)/', $functionBody, $matches);
+
+		// Split the arguments one at a time.
+		if (isset($matches[1])) {
+
+			foreach ($matches[1] as $match) {
+
+				$args = explode(',', $match);
+
+				$param = $this->_stripQuotes($args[0]);
+
+				// Default value is null if not specified.
+				$defaultValue = (isset($args[1])) ? $this->_stripQuotes($args[1]) : null;
+
+				$return[$param] = $defaultValue;
+
+			}
+
+		}
+
+		return $return;
+
+	}
+
+	/**
+	 * Helper to remove quotations from arguments
+	 *
+	 * @param  string $argument The argument from a parsed call
+	 * @return string The argument free of surrounding whitespace and quotations
+	 */
+	private function _stripQuotes($argument) {
+
+		return trim(trim($argument), '\'"');
 
 	}
 
