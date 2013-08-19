@@ -212,6 +212,31 @@ class Surgeree {
 		$this->return_data = preg_replace("/$regex/", $replace, $string);
 		return $this->return_data;
 	}
+	
+	/** Performs a multiple regex replace on a string */
+	function replace_multiple() {
+		$param = $this->EE->TMPL->fetch_param('string', '');
+		$tagdata = $this->EE->TMPL->tagdata;
+		$string = ($tagdata != '' && $param == '') ? $tagdata : $param ;
+		$regex   = $this->EE->TMPL->fetch_param('regex', '');
+		$replace  = $this->EE->TMPL->fetch_param('replace', '');
+		
+		$i=0;
+		
+		$regex_array = explode("|",$regex);
+		$replace_array = explode("|",$replace);
+		
+		foreach($regex_array as $loop)
+		{
+			$string = preg_replace("/$loop/",$replace_array[$i],$string);
+			$i++;
+		}
+
+		//Output transformed string
+		$this->return_data = $string;
+		return $this->return_data;
+	}
+	
 
 	/** Searches for a regex in a string */
 	function match() {
@@ -234,6 +259,7 @@ class Surgeree {
 		$j = 1;
 		for ($i = 1; $i <= $iters; $i += $increment) {
 			$variables[] = array(
+				'index'	=> $j-1,
 				'current' => $j,
 				'total' => $total
 			);
@@ -325,7 +351,7 @@ class Surgeree {
 		return current_url();
 	}
 
-	/** Ensures presence of http in a url, to prevent urls from pointing to wrong domain. */
+	/** Ensures presence of http or https in a url, to prevent urls from pointing to wrong domain. */
 	function ensure_http() {
 		$this->return_data = $this->EE->TMPL->tagdata;
 		if ($this->return_data == '') return '';
