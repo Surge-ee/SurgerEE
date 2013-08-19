@@ -36,6 +36,10 @@ The following community members have made contributions to this project:
 
 ## Changelog
 
+Version 1.5.6
+
+- Fix issue with ensure_http. [Carl Crawley]
+
 Version 1.5.5
 
 - Version number was not bumped in previous release.
