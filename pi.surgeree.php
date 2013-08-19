@@ -31,7 +31,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'SurgerEE',
-	'pi_version'	=> '1.5.5',
+	'pi_version'	=> '1.5.6',
 	'pi_author'		=> 'Digital Surgeons',
 	'pi_author_url'	=> 'http://github.com/dsurgeons/SurgerEE',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
@@ -330,7 +330,7 @@ class Surgeree {
 		$this->return_data = $this->EE->TMPL->tagdata;
 		if ($this->return_data == '') return '';
 
-		if ((strpos($this->return_data, 'http://') === FALSE) || (strpos($this->return_data, 'https://') === FALSE)) {
+		if ((strpos($this->return_data, 'http://') === FALSE) && (strpos($this->return_data, 'https://') === FALSE)) {
 			$this->return_data = 'http://'.$this->return_data;
 		}
 

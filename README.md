@@ -23,6 +23,10 @@ Please see the [wiki](https://github.com/dsurgeons/SurgerEE/wiki) for in depth d
 
 ## Changelog
 
+Version 1.5.6
+
+- Fix issue with ensure_http. [Carl Crawley]
+
 Version 1.5.5
 
 - Version number was not bumped in previous release.
