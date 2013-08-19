@@ -325,12 +325,12 @@ class Surgeree {
 		return current_url();
 	}
 
-	/** Ensures presence of http in a url, to prevent urls from pointing to wrong domain. */
+	/** Ensures presence of http or https in a url, to prevent urls from pointing to wrong domain. */
 	function ensure_http() {
 		$this->return_data = $this->EE->TMPL->tagdata;
 		if ($this->return_data == '') return '';
 
-		if (strpos($this->return_data, 'http://') === FALSE) {
+		if ((strpos($this->return_data, 'http://') === FALSE) || (strpos($this->return_data, 'https://') === FALSE)) {
 			$this->return_data = 'http://'.$this->return_data;
 		}
 
