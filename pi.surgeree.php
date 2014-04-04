@@ -31,7 +31,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'SurgerEE',
-	'pi_version'	=> '1.5.6',
+	'pi_version'	=> '1.5.7',
 	'pi_author'		=> 'Digital Surgeons',
 	'pi_author_url'	=> 'http://github.com/dsurgeons/SurgerEE',
 	'pi_description'=> 'Various commonly needed items that make us want to use php in templates.',
@@ -750,6 +750,19 @@ class Surgeree {
 			($this->EE->session->tracker[1] == 'index' ? '/' : $this->EE->session->tracker[1])
 			: $default;
 
+		return $this->return_data;
+	}
+
+	/**
+	 * Returns the enture uri string, minus the last segemnt. Good for removing pagination.
+	 */	
+	function segments_but_last() {
+		$segments = $this->EE->uri->segment_array();
+
+		//Remove last segment
+		array_pop($segments);
+
+		$this->return_data = implode('/', $segments);
 		return $this->return_data;
 	}
 

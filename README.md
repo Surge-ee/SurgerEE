@@ -36,6 +36,10 @@ The following community members have made contributions to this project:
 
 ## Changelog
 
+Version 1.5.7
+
+- Add segments_but_last tag to get the current uri minus the last segment.
+
 Version 1.5.6
 
 - Fix issue with ensure_http. [Carl Crawley]
