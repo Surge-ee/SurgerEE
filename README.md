@@ -23,6 +23,10 @@ Please see the [wiki](https://github.com/dsurgeons/SurgerEE/wiki) for in depth d
 
 ## Changelog
 
+Version 1.5.7
+
+- Add segments_but_last tag to get the current uri minus the last segment.
+
 Version 1.5.6
 
 - Fix issue with ensure_http. [Carl Crawley]
