@@ -325,6 +325,17 @@ class Surgeree {
 		return current_url();
 	}
 
+	/** Returns the enture uri string, minus the last segemnt. Good for removing pagination. **/
+	function segments_but_last() {
+		$segments = $this->EE->uri->segment_array();
+
+		//Remove last segment
+		array_pop($segments);
+
+		$this->return_data = implode('/', $segments);
+		return $this->return_data;
+	}
+
 	/** Ensures presence of http in a url, to prevent urls from pointing to wrong domain. */
 	function ensure_http() {
 		$this->return_data = $this->EE->TMPL->tagdata;
