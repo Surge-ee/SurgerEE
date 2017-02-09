@@ -442,6 +442,31 @@ class Surgeree {
 		$this->return_data = preg_replace($regex, $replace, $string);
 		return $this->return_data;
 	}
+	
+	/** Performs a multiple regex replace on a string */
+	function replace_multiple() {
+		$param = $this->EE->TMPL->fetch_param('string', '');
+		$tagdata = $this->EE->TMPL->tagdata;
+		$string = ($tagdata != '' && $param == '') ? $tagdata : $param ;
+		$regex   = $this->EE->TMPL->fetch_param('regex', '');
+		$replace  = $this->EE->TMPL->fetch_param('replace', '');
+		
+		$i=0;
+		
+		$regex_array = explode("|",$regex);
+		$replace_array = explode("|",$replace);
+		
+		foreach($regex_array as $loop)
+		{
+			$string = preg_replace("/$loop/",$replace_array[$i],$string);
+			$i++;
+		}
+
+		//Output transformed string
+		$this->return_data = $string;
+		return $this->return_data;
+	}
+	
 
 	/**
 	 * Performs a multiple regex replace on a string
